@@ -4,6 +4,7 @@ using OLXKiller.API.Extensions;
 using OLXKiller.Application.Abstractions;
 using OLXKiller.Application.Dtos.Product;
 using OLXKiller.Domain.Extensions;
+using OLXKiller.Domain.Models;
 
 namespace OLXKiller.API.Controllers;
 
@@ -17,7 +18,8 @@ public class ProductsController(
     public async Task<IActionResult> CreateProduct(
         [FromForm] CreateProductDto productDto)
     {
-        var response = await _productsService.CreateProduct(productDto, User.GetId());
+        var response = await _productsService
+            .CreateProductAsync(productDto, User.GetId());
 
         if (response.IsSuccess)
         {
@@ -42,7 +44,7 @@ public class ProductsController(
         );
 
         var response = await _productsService
-            .AddImagesToProduct(imagesBytes, productId);
+            .AddImagesToProductAsync(imagesBytes, productId);
 
         if (response.IsSuccess)
         {
@@ -52,9 +54,20 @@ public class ProductsController(
         return NotFound(new { description = response.Description });
     }
 
-    /*[HttpGet("all")]
-    public async Task<IEnumerable<object>> GetAllProducts()
+    [HttpGet()]
+    public async Task<IActionResult> GetAllProducts(
+        [FromQuery] ProductFilter filter,
+        [FromQuery] ProductSortParams sortParams,
+        [FromQuery] PageParams pageParams)
     {
-        return [];
-    }*/
+        var result = await _productsService
+            .GetProductCollectionAsync(filter, sortParams, pageParams);
+
+        if (result.Collection.Count() == 0)
+        {
+            return NotFound();
+        }
+
+        return Ok(new { result });
+    }
 }

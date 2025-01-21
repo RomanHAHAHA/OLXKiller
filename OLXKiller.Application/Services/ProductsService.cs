@@ -14,7 +14,7 @@ public class ProductsService(
     IUsersRepository _usersRepository,
     IProductImagesRepository _productImagesRepository) : IProductsService
 {
-    public async Task<IBaseResponse> CreateProduct(
+    public async Task<IBaseResponse> CreateProductAsync(
         CreateProductDto productDto,
         Guid sellerId)
     {
@@ -35,7 +35,7 @@ public class ProductsService(
         return new BaseResponse(HttpStatusCode.OK);
     }
 
-    public async Task<IBaseResponse> AddImagesToProduct(
+    public async Task<IBaseResponse> AddImagesToProductAsync(
         IEnumerable<byte[]> imagesBytes, 
         Guid productId)
     {
@@ -54,5 +54,20 @@ public class ProductsService(
         await _productImagesRepository.CreateRange(imagesToAdd);
 
         return new BaseResponse(HttpStatusCode.OK);
+    }
+
+    public async Task<PagedResult<CollectionProductDto>> GetProductCollectionAsync(
+        ProductFilter productFilter,
+        ProductSortParams sortParams,
+        PageParams pageParams)
+    {
+        var pagedResult = await _productsRepository
+            .GetPaigedCollectionAsync(productFilter, sortParams, pageParams);
+
+        var dtosCollection = pagedResult
+            .Collection
+            .Select(productEntity => new CollectionProductDto(productEntity));
+
+        return new PagedResult<CollectionProductDto>(dtosCollection, pagedResult.TotalCount);
     }
 }
