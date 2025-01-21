@@ -1,0 +1,6 @@
+@OLXKiller.API_HostAddress = http://localhost:5212
+
+GET {{OLXKiller.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
