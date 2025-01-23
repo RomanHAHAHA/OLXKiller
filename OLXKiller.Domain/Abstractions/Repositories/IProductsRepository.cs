@@ -5,6 +5,8 @@ namespace OLXKiller.Domain.Abstractions.Repositories;
 
 public interface IProductsRepository : IRepository<ProductEntity>
 {
+    Task<ProductEntity?> GetByIdWithLikes(Guid productId);
+
     Task<PagedResult<ProductEntity>> GetPaigedCollectionAsync(
         ProductFilter productFilter,
         ProductSortParams sortParams,

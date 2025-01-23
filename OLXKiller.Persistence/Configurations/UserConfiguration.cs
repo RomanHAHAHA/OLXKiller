@@ -21,9 +21,13 @@ public class UserConfiguration : IEntityTypeConfiguration<UserEntity>
         builder.Property(u => u.HashedPassword);
 
         builder.HasOne(u => u.Avatar)
-            .WithOne(a => a.User);
+            .WithOne(a => a.User)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(u => u.ProductsForSale)
-            .WithOne(p => p.Seller);
+            .WithOne(p => p.Seller)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Navigation(u => u.LikedProducts);
     }
 }

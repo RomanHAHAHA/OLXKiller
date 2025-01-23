@@ -17,4 +17,14 @@ public class UsersRepository(AppDbContext appDbContext) :
         => await _appDbContext.Users
             .Include(u => u.Avatar)
             .FirstOrDefaultAsync(u => u.Id == userId);
+
+    public override Task RemoveAsync(UserEntity entity)
+    {
+        var likesToRemove = _appDbContext.Likes
+          .Where(like => like.UserId == entity.Id);
+
+        _appDbContext.Likes.RemoveRange(likesToRemove);
+
+        return base.RemoveAsync(entity);
+    }
 }

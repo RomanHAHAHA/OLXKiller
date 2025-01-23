@@ -17,5 +17,10 @@ public interface IProductsService
     Task<PagedResult<CollectionProductDto>> GetProductCollectionAsync(
         ProductFilter productFilter,
         ProductSortParams sortParams,
-        PageParams pageParams);
+        PageParams pageParams, 
+        Guid currentUserId);
+
+    Task<IBaseResponse> LikeProduct(Guid productId, Guid userId);
+
+    Task<IBaseResponse> UnLikeProduct(Guid productId, Guid userId);
 }

@@ -13,17 +13,20 @@ public class ImageManager : IImageManager
         _options = options.Value;
     }
 
-    public byte[] GetDefaultAvatarBytes()
+    public async Task<byte[]> GetDefaultBytesAsync(string imageName)
     {
-        var defaultAvatarPath = Path.Combine(
-            _options.ImagesDirectory,
-            _options.DefaultAvatarImageName);
+        if (string.IsNullOrWhiteSpace(imageName))
+        {
+            return [];
+        }
+
+        var defaultAvatarPath = Path.Combine(_options.ImagesDirectory, imageName);
 
         if (File.Exists(defaultAvatarPath))
         {
-            return File.ReadAllBytes(defaultAvatarPath);
+            return await File.ReadAllBytesAsync(defaultAvatarPath);
         }
 
-        throw new FileNotFoundException($"Default avatar image not found at {defaultAvatarPath}");
+        return [];
     }
 }

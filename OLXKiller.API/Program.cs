@@ -3,6 +3,7 @@ using FluentValidation.AspNetCore;
 using OLXKiller.API.Extensions;
 using OLXKiller.API.Middlewares;
 using OLXKiller.Application.Abstractions;
+using OLXKiller.Application.Factories;
 using OLXKiller.Application.Options;
 using OLXKiller.Application.Services;
 using OLXKiller.Application.Validators;
@@ -42,6 +43,8 @@ builder.Services.AddScoped<IProductImagesRepository, ProductImagesRepository>();
 builder.Services.AddScoped<IAccountsService, AccountsService>();
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<IProductsService, ProductsService>();
+
+builder.Services.AddScoped<IProductDtoFactory, ProductDtoFactory>();
 #endregion
 
 #region Providers
@@ -81,10 +84,17 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins("http://localhost:3000") 
+        policy.WithOrigins("https://localhost:3000")
+              .AllowCredentials()
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
+});
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
 
 var app = builder.Build();

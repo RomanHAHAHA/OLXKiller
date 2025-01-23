@@ -13,6 +13,8 @@ public class AppDbContext : DbContext
 
     public DbSet<ProductImageEntity> ProductImages { get; set; }
 
+    public DbSet<ProductUserLikeEntity> Likes { get; set; }
+
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {

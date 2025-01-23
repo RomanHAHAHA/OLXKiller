@@ -61,7 +61,7 @@ public class ProductsController(
         [FromQuery] PageParams pageParams)
     {
         var result = await _productsService
-            .GetProductCollectionAsync(filter, sortParams, pageParams);
+            .GetProductCollectionAsync(filter, sortParams, pageParams, User.GetId());
 
         if (result.Collection.Count() == 0)
         {
@@ -69,5 +69,33 @@ public class ProductsController(
         }
 
         return Ok(new { result });
+    }
+
+    [HttpPost("like/{productId:guid}")]
+    [Authorize]
+    public async Task<IActionResult> LikeProduct(Guid productId)
+    {
+        var response = await _productsService.LikeProduct(productId, User.GetId());
+
+        if (response.IsSuccess)
+        {
+            return Ok();
+        }
+
+        return this.CreateResponse(response.Status, response.Description);
+    }
+
+    [HttpPost("un-like/{productId:guid}")]
+    [Authorize]
+    public async Task<IActionResult> UnLikeProduct(Guid productId)
+    {
+        var response = await _productsService.UnLikeProduct(productId, User.GetId());
+
+        if (response.IsSuccess)
+        {
+            return Ok();
+        }
+
+        return NotFound(new { description = response.Description });
     }
 }

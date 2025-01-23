@@ -12,7 +12,8 @@ namespace OLXKiller.Application.Services;
 public class ProductsService(
     IProductsRepository _productsRepository,
     IUsersRepository _usersRepository,
-    IProductImagesRepository _productImagesRepository) : IProductsService
+    IProductImagesRepository _productImagesRepository,
+    IProductDtoFactory _productDtoFactory) : IProductsService
 {
     public async Task<IBaseResponse> CreateProductAsync(
         CreateProductDto productDto,
@@ -59,15 +60,73 @@ public class ProductsService(
     public async Task<PagedResult<CollectionProductDto>> GetProductCollectionAsync(
         ProductFilter productFilter,
         ProductSortParams sortParams,
-        PageParams pageParams)
+        PageParams pageParams, 
+        Guid currentUserId)
     {
         var pagedResult = await _productsRepository
             .GetPaigedCollectionAsync(productFilter, sortParams, pageParams);
 
-        var dtosCollection = pagedResult
-            .Collection
-            .Select(productEntity => new CollectionProductDto(productEntity));
+        var collection = await Task.WhenAll(pagedResult.Collection
+            .Select(p => _productDtoFactory.CreateCollectionDtoAsync(p, currentUserId)));
 
-        return new PagedResult<CollectionProductDto>(dtosCollection, pagedResult.TotalCount);
+        return new PagedResult<CollectionProductDto>(
+            collection,
+            pagedResult.TotalCount);
+    }
+
+    public async Task<IBaseResponse> LikeProduct(Guid productId, Guid userId)
+    {
+        var user = await _usersRepository.GetByIdAsync(userId);
+
+        if (user is null)
+            return new BaseResponse(
+                HttpStatusCode.NotFound, "User was not found");
+        
+        var product = await _productsRepository.GetByIdWithLikes(productId);
+
+        if (product is null)
+            return new BaseResponse(
+                HttpStatusCode.NotFound, "Product was not found");
+        
+        var existingLike = product.UsersWhoLiked
+            .FirstOrDefault(l => l.ProductId == productId && l.UserId == userId);
+
+        if (existingLike is not null)
+            return new BaseResponse(
+                HttpStatusCode.BadRequest, "Like already exists");
+
+        var like = new ProductUserLikeEntity(productId, userId);
+
+        product.UsersWhoLiked.Add(like);
+        await _productsRepository.UpdateAsync(product);
+
+        return new BaseResponse(HttpStatusCode.OK);
+    }
+
+    public async Task<IBaseResponse> UnLikeProduct(Guid productId, Guid userId)
+    {
+        var user = await _usersRepository.GetByIdAsync(userId);
+
+        if (user is null)
+            return new BaseResponse(
+                HttpStatusCode.NotFound, "User was not found");
+
+        var product = await _productsRepository.GetByIdWithLikes(productId);
+
+        if (product is null)
+            return new BaseResponse(
+                HttpStatusCode.NotFound, "Product was not found");
+
+        var like = product.UsersWhoLiked
+            .FirstOrDefault(l => l.ProductId == productId && l.UserId == userId);
+
+        if (like is null)
+            return new BaseResponse(
+                HttpStatusCode.NotFound, "Like was not found");
+
+        product.UsersWhoLiked.Remove(like);
+        await _productsRepository.UpdateAsync(product);
+
+        return new BaseResponse(HttpStatusCode.OK);
     }
 }

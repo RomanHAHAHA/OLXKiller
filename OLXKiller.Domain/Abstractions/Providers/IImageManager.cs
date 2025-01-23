@@ -2,5 +2,5 @@
 
 public interface IImageManager
 {
-    byte[] GetDefaultAvatarBytes();
+    Task<byte[]> GetDefaultBytesAsync(string imageName);
 }

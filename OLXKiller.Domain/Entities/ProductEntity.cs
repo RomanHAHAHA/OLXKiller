@@ -26,4 +26,6 @@ public class ProductEntity
     public UserEntity? Seller { get; set; }
 
     public ICollection<ProductImageEntity> Images { get; set; } = [];
+
+    public ICollection<ProductUserLikeEntity> UsersWhoLiked { get; set; } = [];
 }

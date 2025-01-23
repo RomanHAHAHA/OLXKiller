@@ -18,9 +18,28 @@ public class ProductsRepository(AppDbContext appDbContext) :
     {
         return await GetAllAsync()
             .AsNoTracking()
+            .AsSplitQuery()
             .Include(p => p.Images)
+            .Include(p => p.UsersWhoLiked)
             .Filter(productFilter)
             .Sort(sortParams)
             .ToPagedAsync(pageParams);
+    }
+
+    public async Task<ProductEntity?> GetByIdWithLikes(Guid productId)
+    {
+        return await _appDbContext.Products
+            .Include(p => p.UsersWhoLiked)
+            .FirstOrDefaultAsync(p => p.Id == productId);
+    }
+
+    public override Task RemoveAsync(ProductEntity entity)
+    {
+        var likesToRemove = _appDbContext.Likes
+          .Where(like => like.ProductId == entity.Id);
+
+        _appDbContext.Likes.RemoveRange(likesToRemove);
+
+        return base.RemoveAsync(entity);
     }
 }

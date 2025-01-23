@@ -42,28 +42,23 @@ public static class QueriableExtensions
     {
         var keySelector = GetKeySelector(sortParams.OrderBy);
 
-        if (keySelector is null)
-        {
-            return query;
-        }
-
         return sortParams.SortDirection == SortDirection.Descending
             ? query.OrderByDescending(keySelector)
             : query.OrderBy(keySelector);
     }
 
-    private static Expression<Func<ProductEntity, object>>? GetKeySelector(string? orderBy)
+    private static Expression<Func<ProductEntity, object>> GetKeySelector(string? orderBy)
     {
         if (string.IsNullOrEmpty(orderBy))
         {
-            return null; 
+            return x => x.Id; 
         }
 
         return orderBy switch
         {
             nameof(ProductEntity.Name) => x => x.Name,
             nameof(ProductEntity.Price) => x => x.Price,
-            _ => null 
+            _ => x => x.Id
         };
     }
 

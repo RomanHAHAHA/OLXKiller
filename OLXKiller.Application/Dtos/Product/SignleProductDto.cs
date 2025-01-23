@@ -1,6 +1,6 @@
 ﻿namespace OLXKiller.Application.Dtos.Product;
 
-public class CollectionProductDto
+public class SignleProductDto
 {
     public Guid Id { get; set; }
 
@@ -8,13 +8,11 @@ public class CollectionProductDto
 
     public string Description { get; set; } = string.Empty;
 
-    public decimal Price { get; set; }
+    public decimal Price { get; set; } = decimal.Zero;
 
     public int Amount { get; set; }
 
     public bool IsAvailable => Amount > 0;
 
-    public bool Liked { get; set; }
-
-    public string ImageData { get; set; } = string.Empty;
+    public IEnumerable<string> ImageStrings { get; set; } = []; 
 }

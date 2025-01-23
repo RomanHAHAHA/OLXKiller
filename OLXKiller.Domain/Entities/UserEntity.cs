@@ -19,7 +19,9 @@ public class UserEntity
 
     public UserAvatarEntity? Avatar { get; set; }
 
-    public IEnumerable<ProductEntity> ProductsForSale { get; set; } = [];
+    public ICollection<ProductEntity> ProductsForSale { get; set; } = [];
+
+    public ICollection<ProductUserLikeEntity> LikedProducts { get; set; } = [];
 
     public UserEntity() { }
 }

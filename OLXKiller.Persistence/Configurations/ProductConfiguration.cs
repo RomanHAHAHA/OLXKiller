@@ -23,9 +23,13 @@ public class ProductConfiguration : IEntityTypeConfiguration<ProductEntity>
         builder.Property(p => p.SellerId);
 
         builder.HasOne(p => p.Seller)
-            .WithMany(u => u.ProductsForSale);
+            .WithMany(u => u.ProductsForSale)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasMany(p => p.Images)
-            .WithOne(i => i.Product);
+            .WithOne(i => i.Product)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Navigation(p => p.UsersWhoLiked);
     }
 }

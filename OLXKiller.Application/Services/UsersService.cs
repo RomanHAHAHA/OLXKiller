@@ -1,5 +1,7 @@
-﻿using OLXKiller.Application.Abstractions;
+﻿using Microsoft.Extensions.Options;
+using OLXKiller.Application.Abstractions;
 using OLXKiller.Application.Dtos.User;
+using OLXKiller.Application.Options;
 using OLXKiller.Domain.Abstractions.Models;
 using OLXKiller.Domain.Abstractions.Providers;
 using OLXKiller.Domain.Abstractions.Repositories;
@@ -13,7 +15,8 @@ namespace OLXKiller.Application.Services;
 public class UsersService(
     IUsersRepository _usersRepository,
     IRepository<UserAvatarEntity> _avatarsRepository,
-    IImageManager _imageManager) : IUsersService
+    IImageManager _imageManager,
+    IOptions<ImageManagerOptions> _imageManagerOptions) : IUsersService
 {
     public async Task<IBaseResponse> CreateAvatar(Stream imageStream, Guid userId)
     {
@@ -63,14 +66,13 @@ public class UsersService(
         }
 
         var image64String = user.Avatar is null
-            ? Convert.ToBase64String(_imageManager.GetDefaultAvatarBytes())
-            : Convert.ToBase64String(user.Avatar.Data ?? []);
+            ? Convert.ToBase64String(
+                await _imageManager.GetDefaultBytesAsync(
+                    _imageManagerOptions.Value.DefaultProductImageName))
+            : Convert.ToBase64String(
+                user.Avatar.Data ?? []);
 
-        var userView = new LoginedUserViewDto
-        {
-            NickName = user.NickName,
-            Avatar64String = image64String
-        };
+        var userView = new LoginedUserViewDto(user.NickName, image64String);
 
         return new BaseResponse<LoginedUserViewDto>(
             HttpStatusCode.OK,
