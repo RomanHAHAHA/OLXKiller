@@ -63,6 +63,11 @@ public class ProductsController(
         var result = await _productsService
             .GetProductCollectionAsync(filter, sortParams, pageParams, User.GetId());
 
+        foreach (var item in result.Collection)
+        {
+            Console.WriteLine(item.Liked);
+        }
+
         if (result.Collection.Count() == 0)
         {
             return NotFound();

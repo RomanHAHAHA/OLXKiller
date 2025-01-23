@@ -19,8 +19,13 @@ public class ProductDtoFactory(
             ? productEntity.Images.First().Data
             : await _imageManager.GetDefaultBytesAsync(_imageOptions.Value.DefaultProductImageName);
 
-        var liked = productEntity.UsersWhoLiked
-            .FirstOrDefault(like => like.UserId == currentUserId) is not null;
+        var liked = false;
+
+        if (!currentUserId.Equals(Guid.Empty))
+        {
+            liked = productEntity.UsersWhoLiked
+                .FirstOrDefault(like => like.UserId == currentUserId) is not null;
+        }
 
         return new CollectionProductDto
         {
