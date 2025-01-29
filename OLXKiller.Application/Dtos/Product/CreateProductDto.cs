@@ -8,9 +8,9 @@ public class CreateProductDto
 
     public string Description { get; set; } = string.Empty;
 
-    public decimal Price { get; set; }
+    public decimal? Price { get; set; }
 
-    public int Amount { get; set; }
+    public int? Amount { get; set; }
 
     public ProductEntity AsEntity(Guid sellerId)
     {
@@ -19,8 +19,8 @@ public class CreateProductDto
             Id = Guid.NewGuid(),
             Name = Name,
             Description = Description,
-            Price = Price,
-            Amount = Amount,
+            Price = Price ?? decimal.Zero,
+            Amount = Amount ?? 0,
             SellerId = sellerId
         };
     }

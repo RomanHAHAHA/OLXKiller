@@ -2,15 +2,17 @@
 
 public static class StreamExtensions
 {
-    public async static Task<byte[]> ConvertToBytesAsync(this Stream stream)
+    public static byte[] ConvertToBytes(this Stream stream)
     {
         if (stream is null)
         {
             return [];
         }
 
+        stream.Position = 0;
+
         using var memoryStream = new MemoryStream();
-        await stream.CopyToAsync(memoryStream);
+        stream.CopyTo(memoryStream);
 
         return memoryStream.ToArray();
     }

@@ -1,0 +1,9 @@
+.form-control.is-invalid {
+    background-color: #343a40 !important;  
+    color: #f8d7da !important;             
+  }
+  
+  .form-control.is-invalid::placeholder {
+    color: #f8d7da !important;             
+  }
+  

@@ -8,4 +8,8 @@ public interface IProductDtoFactory
     Task<CollectionProductDto> CreateCollectionDtoAsync(
         ProductEntity productEntity,
         Guid currentUserId);
+
+    Task<SingleProductDto> CreateSingleDtoAsync(
+        ProductEntity productEntity,
+        Guid currentUserId);
 }

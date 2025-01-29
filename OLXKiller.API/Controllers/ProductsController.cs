@@ -16,22 +16,23 @@ public class ProductsController(
     [HttpPost("create")]
     [Authorize]
     public async Task<IActionResult> CreateProduct(
-        [FromForm] CreateProductDto productDto)
+        [FromBody] CreateProductDto productDto)
     {
         var response = await _productsService
             .CreateProductAsync(productDto, User.GetId());
 
         if (response.IsSuccess)
         {
-            return Ok(response);
+            return Ok(new { productId = response.Data });
         }
 
         return NotFound(new { description = response.Description });
     }
 
     [HttpPost("add-images-to-product/{productId:guid}")]
+    [Authorize]
     public async Task<IActionResult> AddImagesToProduct(
-        ICollection<IFormFile> images, 
+        ICollection<IFormFile> images,
         Guid productId)
     {
         if (images is null || images.Count == 0)
@@ -39,9 +40,8 @@ public class ProductsController(
             return BadRequest(new { description = "No images provided." });
         }
 
-        var imagesBytes = await Task.WhenAll(
-            images.Select(i => i.OpenReadStream().ConvertToBytesAsync())
-        );
+        var imagesBytes = images
+            .Select(image => image.OpenReadStream().ConvertToBytes());
 
         var response = await _productsService
             .AddImagesToProductAsync(imagesBytes, productId);
@@ -63,17 +63,38 @@ public class ProductsController(
         var result = await _productsService
             .GetProductCollectionAsync(filter, sortParams, pageParams, User.GetId());
 
-        foreach (var item in result.Collection)
-        {
-            Console.WriteLine(item.Liked);
-        }
-
         if (result.Collection.Count() == 0)
         {
             return NotFound();
         }
 
         return Ok(new { result });
+    }
+
+    [HttpGet("userId={userId:guid}")]
+    public async Task<IActionResult> GetUserProducts(Guid userId)
+    {
+        var products = await _productsService.GetUserProductsAsync(userId);
+
+        if (products.Count() == 0)
+        {
+            return NotFound();
+        }
+
+        return Ok(new { products });
+    }
+    
+    [HttpGet("productId={productId:guid}")]
+    public async Task<IActionResult> GetProductInfo(Guid productId)
+    {
+        var response = await _productsService.GetProductInfoAsync(productId, User.GetId());
+
+        if (response.IsSuccess)
+        {
+            return Ok(new { data = response.Data });
+        }
+
+        return NotFound(new { description = response.Description });
     }
 
     [HttpPost("like/{productId:guid}")]

@@ -15,7 +15,7 @@ public class ProductsService(
     IProductImagesRepository _productImagesRepository,
     IProductDtoFactory _productDtoFactory) : IProductsService
 {
-    public async Task<IBaseResponse> CreateProductAsync(
+    public async Task<IBaseResponse<Guid>> CreateProductAsync(
         CreateProductDto productDto,
         Guid sellerId)
     {
@@ -23,15 +23,26 @@ public class ProductsService(
             .GetByIdAsync(sellerId, TrackingEnable.False);
 
         if (seller is null)
-        {
-            return new BaseResponse(
-                HttpStatusCode.NotFound,
-                "Seller was not found");
-        }
+            return new BaseResponse<Guid>(
+                HttpStatusCode.NotFound, "Seller was not found");
 
         var product = productDto.AsEntity(sellerId);
         
         await _productsRepository.CreateAsync(product);
+
+        return new BaseResponse<Guid>(
+            HttpStatusCode.OK, data: product.Id);
+    }
+
+    public async Task<IBaseResponse> RemoveProductAsync(Guid productId)
+    {
+        var product = await _productsRepository.GetByIdAsync(productId);
+
+        if (product is null)
+            return new BaseResponse(
+                HttpStatusCode.NotFound, "Product was not found");
+
+        await _productsRepository.RemoveAsync(product);
 
         return new BaseResponse(HttpStatusCode.OK);
     }
@@ -57,6 +68,19 @@ public class ProductsService(
         return new BaseResponse(HttpStatusCode.OK);
     }
 
+    public async Task<IBaseResponse> RemoveImageFromProductAsync(Guid imageId)
+    {
+        var productImage = await _productImagesRepository.GetByIdAsync(imageId);
+
+        if (productImage is null)
+            return new BaseResponse(
+                HttpStatusCode.OK, "Image was not found");
+
+        await _productImagesRepository.RemoveAsync(productImage);
+
+        return new BaseResponse(HttpStatusCode.OK);
+    }
+
     public async Task<PagedResult<CollectionProductDto>> GetProductCollectionAsync(
         ProductFilter productFilter,
         ProductSortParams sortParams,
@@ -72,6 +96,31 @@ public class ProductsService(
         return new PagedResult<CollectionProductDto>(
             collection,
             pagedResult.TotalCount);
+    }
+
+    public async Task<IBaseResponse<SingleProductDto>> GetProductInfoAsync(
+        Guid productId, Guid currentUserId)
+    {
+        var prodcut = await _productsRepository.GetByIdForSingleDto(productId);
+
+        if (prodcut is null)
+            return new BaseResponse<SingleProductDto>(
+                HttpStatusCode.OK, "Product was not found");
+
+        var dto = await _productDtoFactory.CreateSingleDtoAsync(prodcut, currentUserId);
+
+        return new BaseResponse<SingleProductDto>(
+            HttpStatusCode.OK, data: dto);
+    }
+
+    public async Task<IEnumerable<CollectionProductDto>> GetUserProductsAsync(Guid userId)
+    {
+        var products = await _productsRepository.GetUserProductsAsync(userId);
+
+        var dtos = await Task.WhenAll(products
+            .Select(async p => await _productDtoFactory.CreateCollectionDtoAsync(p, userId)));
+
+        return dtos;
     }
 
     public async Task<IBaseResponse> LikeProduct(Guid productId, Guid userId)

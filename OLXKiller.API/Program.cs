@@ -75,6 +75,7 @@ builder.Services.AddAuthorization();
 #endregion
 
 builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
+builder.Services.AddTransient<RequestLoggingMiddleware>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -100,6 +101,8 @@ builder.Services.ConfigureApplicationCookie(options =>
 var app = builder.Build();
 
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
+app.UseMiddleware<RequestLoggingMiddleware>();
+
 app.UseCors();
 
 if (app.Environment.IsDevelopment())

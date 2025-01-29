@@ -29,7 +29,7 @@ public class UsersService(
                 "You already have an avatar!");
         }
 
-        var imageData = await imageStream.ConvertToBytesAsync();
+        var imageData = imageStream.ConvertToBytes();
         var avatarEntity = new UserAvatarEntity(userId, imageData);
         await _avatarsRepository.CreateAsync(avatarEntity);
 
@@ -47,7 +47,7 @@ public class UsersService(
                 "You dont have an avatar yet!");
         }
 
-        var imageData = await imageStream.ConvertToBytesAsync();
+        var imageData = imageStream.ConvertToBytes();
         userAvatar.Data = imageData;
         await _avatarsRepository.UpdateAsync(userAvatar);
 
