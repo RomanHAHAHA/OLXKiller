@@ -23,5 +23,7 @@ public class UserEntity
 
     public ICollection<ProductUserLikeEntity> LikedProducts { get; set; } = [];
 
+    public ICollection<RoleEntity> Roles { get; set; } = [];
+
     public UserEntity() { }
 }

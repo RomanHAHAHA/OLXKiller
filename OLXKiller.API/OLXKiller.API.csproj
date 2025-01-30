@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OLXKiller.Application\OLXKiller.Application.csproj" />
-    <ProjectReference Include="..\OLXKiller.Infrastructure\OLXKiller.Infrastructure.csproj" />
     <ProjectReference Include="..\OLXKiller.Persistence\OLXKiller.Persistence.csproj" />
   </ItemGroup>
 

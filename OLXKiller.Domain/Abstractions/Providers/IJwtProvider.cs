@@ -4,5 +4,5 @@ namespace OLXKiller.Domain.Abstractions.Providers;
 
 public interface IJwtProvider
 {
-    string GenerateToken(UserEntity user);
+    Task<string> GenerateTokenAsync(UserEntity user);
 }

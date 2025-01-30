@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Writers;
+using OLXKiller.API.Authentication;
 using OLXKiller.API.Extensions;
 using OLXKiller.Application.Abstractions;
 using OLXKiller.Application.Dtos.Product;
+using OLXKiller.Domain.Enums;
 using OLXKiller.Domain.Extensions;
 using OLXKiller.Domain.Models;
 
@@ -27,6 +30,13 @@ public class ProductsController(
         }
 
         return NotFound(new { description = response.Description });
+    }
+
+    [HttpDelete("{productId:guid}")]
+    [HasPermission(Permission.DeleteAllProducts)]
+    public async Task<IActionResult> DeleteProduct(Guid productId)
+    {
+        return Ok();
     }
 
     [HttpPost("add-images-to-product/{productId:guid}")]

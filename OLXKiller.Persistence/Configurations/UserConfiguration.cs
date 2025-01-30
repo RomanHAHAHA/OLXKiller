@@ -29,5 +29,8 @@ public class UserConfiguration : IEntityTypeConfiguration<UserEntity>
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.Navigation(u => u.LikedProducts);
+
+        builder.HasMany(u => u.Roles)
+            .WithMany(r => r.Users);
     }
 }

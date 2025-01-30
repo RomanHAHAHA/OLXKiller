@@ -7,16 +7,9 @@ namespace OLXKiller.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class UsersController : ControllerBase
+public class UsersController(
+    IUsersService _usersService) : ControllerBase
 {
-    private readonly IUsersService _usersService;
-
-    public UsersController(IUsersService usersService)
-    {
-        _usersService = usersService;
-    }
-
-
     [HttpGet("get-view-data")]
     [Authorize]
     public async Task<IActionResult> GetLoginedUserViewModel()

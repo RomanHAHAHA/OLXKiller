@@ -2,7 +2,7 @@
 using OLXKiller.Application.Options;
 using OLXKiller.Domain.Abstractions.Providers;
 
-namespace OLXKiller.Infrastructure.Services;
+namespace OLXKiller.Application.Providers;
 
 public class ImageManager : IImageManager
 {

@@ -16,7 +16,7 @@ public class AccountsService(
 {
     public async Task<IBaseResponse<string>> Login(LoginUserDto loginUserDto)
     {
-        var user = await _usersRepository.GetByEmail(loginUserDto.Email);
+        var user = await _usersRepository.GetByEmailAsync(loginUserDto.Email);
 
         if (user is null)
         {
@@ -32,7 +32,7 @@ public class AccountsService(
                 "Incorrect password");
         }
 
-        var token = _jwtProvider.GenerateToken(user);
+        var token = await _jwtProvider.GenerateTokenAsync(user);
 
         return new BaseResponse<string>(
             HttpStatusCode.OK,

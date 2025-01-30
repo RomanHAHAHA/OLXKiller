@@ -6,5 +6,5 @@ public static class CustomClaims
 
     public static string NickName => nameof(NickName);
 
-    public static string Avatar => nameof(Avatar);
+    public static string Permissions => nameof(Permissions);
 }

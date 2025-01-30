@@ -15,6 +15,11 @@ public class AppDbContext : DbContext
 
     public DbSet<ProductUserLikeEntity> Likes { get; set; }
 
+    public DbSet<PermissionEntity> Permissions { get; set; }
+
+    public DbSet<RoleEntity> Roles { get; set; }
+
+    public DbSet<RolePermissionEntity> RolePermissions { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {

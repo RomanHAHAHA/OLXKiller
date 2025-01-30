@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OLXKiller.Persistence.Contexts;
 
@@ -11,9 +12,11 @@ using OLXKiller.Persistence.Contexts;
 namespace OLXKiller.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250129175605_AddedPermissionsAndRoles")]
+    partial class AddedPermissionsAndRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,11 +51,6 @@ namespace OLXKiller.Persistence.Migrations
                         {
                             Id = 2,
                             Name = "RemoveOtherUserAvatar"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "AssignRoleToUser"
                         });
                 });
 
@@ -181,11 +179,6 @@ namespace OLXKiller.Persistence.Migrations
                         {
                             RoleId = 2,
                             PermissionId = 2
-                        },
-                        new
-                        {
-                            RoleId = 2,
-                            PermissionId = 3
                         });
                 });
 

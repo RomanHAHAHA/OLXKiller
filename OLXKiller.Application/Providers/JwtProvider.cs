@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using OLXKiller.Application.Abstractions;
 using OLXKiller.Application.Options;
 using OLXKiller.Domain.Abstractions.Providers;
 using OLXKiller.Domain.Entities;
@@ -8,25 +9,30 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace OLXKiller.Infrastructure.Services;
+namespace OLXKiller.Application.Providers;
 
-public class JwtProvider : IJwtProvider
+public class JwtProvider(
+    IOptions<JwtOptions> _options,
+    IPermissionsService _permissionsService) : IJwtProvider
 {
-    private readonly JwtOptions _options;
+    private readonly JwtOptions _options = _options.Value;
 
-    public JwtProvider(
-        IOptions<JwtOptions> options)
-    {
-        _options = options.Value;
-    }
-
-    public string GenerateToken(UserEntity user)
+    public async Task<string> GenerateTokenAsync(UserEntity user)
     {
         var claims = new List<Claim>
         {
             new(CustomClaims.UserId, user.Id.ToString()),
             new(CustomClaims.NickName, user.NickName),
         };
+
+        var permissions = await _permissionsService.GetPermissionsAsync(user.Id);
+
+        foreach (var permission in permissions)
+        {
+            claims.Add(new Claim(
+                CustomClaims.Permissions, 
+                permission.ToString()));
+        }
 
         var signingCredentials = new SigningCredentials(
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey)),

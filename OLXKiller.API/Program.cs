@@ -1,16 +1,18 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
+using OLXKiller.API.Authentication;
 using OLXKiller.API.Extensions;
 using OLXKiller.API.Middlewares;
 using OLXKiller.Application.Abstractions;
 using OLXKiller.Application.Factories;
 using OLXKiller.Application.Options;
+using OLXKiller.Application.Providers;
 using OLXKiller.Application.Services;
 using OLXKiller.Application.Validators;
 using OLXKiller.Domain.Abstractions.Providers;
 using OLXKiller.Domain.Abstractions.Repositories;
 using OLXKiller.Domain.Entities;
-using OLXKiller.Infrastructure.Services;
 using OLXKiller.Persistence.Contexts;
 using OLXKiller.Persistence.Repositories;
 using ProjectX.Infrastructure.Repositories;
@@ -37,20 +39,23 @@ builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<IRepository<UserAvatarEntity>, UserAvatarsRepository>();
 builder.Services.AddScoped<IProductsRepository, ProductsRepository>();
 builder.Services.AddScoped<IProductImagesRepository, ProductImagesRepository>();
-#endregion
-
-#region Services
-builder.Services.AddScoped<IAccountsService, AccountsService>();
-builder.Services.AddScoped<IUsersService, UsersService>();
-builder.Services.AddScoped<IProductsService, ProductsService>();
-
-builder.Services.AddScoped<IProductDtoFactory, ProductDtoFactory>();
+builder.Services.AddScoped<IRolesRepository, RolesRepository>();
 #endregion
 
 #region Providers
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 builder.Services.AddScoped<IImageManager, ImageManager>();
+#endregion
+
+#region Services
+builder.Services.AddScoped<IAccountsService, AccountsService>();
+builder.Services.AddScoped<IUsersService, UsersService>();
+builder.Services.AddScoped<IProductsService, ProductsService>();
+builder.Services.AddScoped<IPermissionsService, PermissionsService>();
+builder.Services.AddScoped<IRolesService, RolesService>();
+
+builder.Services.AddScoped<IProductDtoFactory, ProductDtoFactory>();
 #endregion
 
 #region DB
@@ -61,7 +66,7 @@ var dbOptions = builder.Configuration
 builder.Services.AddSqlServer<AppDbContext>(dbOptions.ConnectionString);
 #endregion
 
-#region Authentication
+#region Authentication & Authorization
 var jwtOptions = builder.Configuration
     .GetSection(nameof(JwtOptions))
     .Get<JwtOptions>() ?? throw new NullReferenceException(nameof(JwtOptions));
@@ -72,6 +77,9 @@ var customCookieOptions = builder.Configuration
 
 builder.Services.AddApiAuthentication(jwtOptions, customCookieOptions);
 builder.Services.AddAuthorization();
+
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
+builder.Services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
 #endregion
 
 builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
