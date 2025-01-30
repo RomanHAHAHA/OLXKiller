@@ -33,7 +33,7 @@ public class RolesService(
             return new BaseResponse(
                 HttpStatusCode.BadRequest, "Invalid role id received from client");
 
-        user.Roles.Add(role);
+        user.Role = role;
 
         await _usersRepository.UpdateAsync(user);
 

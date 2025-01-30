@@ -28,6 +28,6 @@ public class RolesController(IRolesService _rolesService) : ControllerBase
             return Ok();
         }
 
-        return this.CreateResponse(response.Status, response.Description);
+        return this.HandleResponse(response);
     }
 }

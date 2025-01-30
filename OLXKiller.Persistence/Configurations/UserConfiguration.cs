@@ -30,7 +30,9 @@ public class UserConfiguration : IEntityTypeConfiguration<UserEntity>
 
         builder.Navigation(u => u.LikedProducts);
 
-        builder.HasMany(u => u.Roles)
+        builder.Property(u => u.RoleId).HasDefaultValue(1);
+
+        builder.HasOne(u => u.Role)
             .WithMany(r => r.Users);
     }
 }

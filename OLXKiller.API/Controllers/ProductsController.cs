@@ -8,6 +8,7 @@ using OLXKiller.Application.Dtos.Product;
 using OLXKiller.Domain.Enums;
 using OLXKiller.Domain.Extensions;
 using OLXKiller.Domain.Models;
+using System.Linq.Expressions;
 
 namespace OLXKiller.API.Controllers;
 
@@ -36,7 +37,7 @@ public class ProductsController(
     [HasPermission(Permission.DeleteAllProducts)]
     public async Task<IActionResult> DeleteProduct(Guid productId)
     {
-        return Ok();
+        throw new NotImplementedException();
     }
 
     [HttpPost("add-images-to-product/{productId:guid}")]
@@ -113,12 +114,12 @@ public class ProductsController(
     {
         var response = await _productsService.LikeProduct(productId, User.GetId());
 
-        if (response.IsSuccess)
+        if (response.IsFailure)
         {
-            return Ok();
+            return this.HandleResponse(response);
         }
 
-        return this.CreateResponse(response.Status, response.Description);
+        return Ok();
     }
 
     [HttpPost("un-like/{productId:guid}")]
@@ -127,11 +128,11 @@ public class ProductsController(
     {
         var response = await _productsService.UnLikeProduct(productId, User.GetId());
 
-        if (response.IsSuccess)
+        if (response.IsFailure)
         {
-            return Ok();
+            return this.HandleResponse(response);
         }
 
-        return NotFound(new { description = response.Description });
+        return Ok();
     }
 }

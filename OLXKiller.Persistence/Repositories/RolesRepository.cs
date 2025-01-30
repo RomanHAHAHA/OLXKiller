@@ -16,4 +16,7 @@ public class RolesRepository(AppDbContext appDbContext) :
 
     public async Task<RoleEntity?> GetByIdAsync(int roleId) 
         => await _appDbContext.Roles.FirstOrDefaultAsync(r => r.Id == roleId);
+
+    public async Task<RoleEntity?> GetByNameAsync(string roleName) 
+        => await _appDbContext.Roles.FirstOrDefaultAsync(r => r.Name == roleName);
 }

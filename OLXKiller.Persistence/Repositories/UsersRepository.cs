@@ -23,15 +23,14 @@ public class UsersRepository(AppDbContext appDbContext) :
     {
         var roles = await _appDbContext.Users
             .AsNoTracking()
-            .Include(u => u.Roles)
-            .ThenInclude(u => u.Permissions)
+            .Include(u => u.Role)
+            .ThenInclude(r => r.Permissions)
             .Where(u => u.Id == userId)
-            .Select(u => u.Roles)
+            .Select(u => u.Role)
             .ToArrayAsync();
 
         return roles
-            .SelectMany(r => r)
-            .SelectMany(r => r.Permissions)
+            .SelectMany(r => r?.Permissions ?? [])
             .Select(p => (Permission)p.Id)
             .ToHashSet();
     }

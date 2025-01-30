@@ -11,41 +11,30 @@ namespace OLXKiller.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class AccountsController : ControllerBase
+public class AccountsController(
+    IAccountsService _accountsService,
+    IOptions<CustomCookieOptions> _options) : ControllerBase
 {
-    private readonly IAccountsService _accountsService;
-    private readonly CustomCookieOptions _options;
-
-    public AccountsController(
-        IAccountsService accountsService,
-        IOptions<CustomCookieOptions> options)
-    {
-        _accountsService = accountsService;
-        _options = options.Value;
-    }
-
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginUserDto loginUserDto)
     {
         var response = await _accountsService.Login(loginUserDto);
 
-        switch (response.Status)
+        if (response.IsFailure)
         {
-            case HttpStatusCode.OK:
-                var token = response.Data;
-
-                HttpContext.Response.Cookies.Append(_options.Name, token, new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = true,
-                    SameSite = SameSiteMode.None,
-                });
-
-                return Ok(new { token });
-
-            default:
-                return this.CreateResponse(response.Status, response.Description);
+            return this.HandleResponse(response);
         }
+
+        var token = response.Data;
+
+        HttpContext.Response.Cookies.Append(_options.Value.Name, token, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.None,
+        });
+
+        return Ok(new { token });
     }
 
     [HttpPost("register")]
@@ -53,18 +42,18 @@ public class AccountsController : ControllerBase
     {
         var response = await _accountsService.Register(registerUserDto);
 
-        if (response.IsSuccess)
+        if (response.IsFailure)
         {
-            return Ok();
+            return this.HandleResponse(response);
         }
 
-        return this.CreateResponse(response.Status, response.Description);
+        return Ok();
     }
 
     [HttpDelete("logout")]
     public IActionResult LogOut()
     {
-        HttpContext.Response.Cookies.Delete(_options.Name);
+        HttpContext.Response.Cookies.Delete(_options.Value.Name);
 
         return Ok();
     }

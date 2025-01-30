@@ -11,6 +11,8 @@ public interface IBaseResponse<T>
     HttpStatusCode Status { get; set; }
 
     public bool IsSuccess => Status == HttpStatusCode.OK;
+
+    public bool IsFailure => !IsSuccess;
 }
 
 public interface IBaseResponse
@@ -20,4 +22,6 @@ public interface IBaseResponse
     HttpStatusCode Status { get; set; }
 
     public bool IsSuccess => Status == HttpStatusCode.OK;
+
+    public bool IsFailure => !IsSuccess;
 }

@@ -1,20 +1,38 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OLXKiller.Domain.Abstractions.Models;
 using System.Net;
 
 namespace OLXKiller.API.Extensions;
 
 public static class ControllerExtensions
 {
-    public static IActionResult CreateResponse(
+    public static IActionResult HandleResponse(
         this ControllerBase controller,
-        HttpStatusCode statusCode,
+        IBaseResponse response)
+    {
+        return CreateResultObject(controller, response.Status, response.Description);
+    }
+
+    public static IActionResult HandleResponse<T>(
+        this ControllerBase controller,
+        IBaseResponse<T> response)
+    {
+        return CreateResultObject(controller, response.Status, response.Description);
+    }
+
+    private static IActionResult CreateResultObject(
+        this ControllerBase controller,
+        HttpStatusCode httpStatusCode, 
         string description)
     {
-        return statusCode switch
+        var jsonError = new { description };
+
+        return httpStatusCode switch
         {
-            HttpStatusCode.NotFound => controller.NotFound(new { description }),
-            HttpStatusCode.Unauthorized => controller.Unauthorized(new { description }),
-            _ => controller.BadRequest(new { description }),
+            HttpStatusCode.NotFound => controller.NotFound(jsonError),
+            HttpStatusCode.Unauthorized => controller.Unauthorized(jsonError),
+            HttpStatusCode.Conflict => controller.Conflict(jsonError),
+            _ => controller.BadRequest(jsonError),
         };
     }
 }
