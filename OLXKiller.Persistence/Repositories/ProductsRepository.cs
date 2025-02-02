@@ -26,17 +26,6 @@ public class ProductsRepository(AppDbContext appDbContext) :
             .ToPagedAsync(pageParams);
     }
 
-    public async Task<IEnumerable<ProductEntity>> GetUserProductsAsync(Guid userId)
-    {
-        return await GetAllAsync()
-            .AsNoTracking()
-            .AsSplitQuery()
-            .Include(p => p.Images)
-            .Include(p => p.UsersWhoLiked)
-            .Where(p => p.SellerId == userId)
-            .ToListAsync();
-    }
-
     public async Task<ProductEntity?> GetByIdWithLikes(Guid productId)
     {
         return await _appDbContext.Products
@@ -51,18 +40,7 @@ public class ProductsRepository(AppDbContext appDbContext) :
             .AsNoTracking()
             .Include(p => p.Images)
             .Include(p => p.UsersWhoLiked)
-            .Include(p => p.Seller!)
             .ThenInclude(u => u.Avatar)
             .FirstOrDefaultAsync(p => p.Id == productId);
-    }
-
-    public override Task RemoveAsync(ProductEntity entity)
-    {
-        var likesToRemove = _appDbContext.Likes
-          .Where(like => like.ProductId == entity.Id);
-
-        _appDbContext.Likes.RemoveRange(likesToRemove);
-
-        return base.RemoveAsync(entity);
     }
 }

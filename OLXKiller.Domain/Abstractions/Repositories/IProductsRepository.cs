@@ -13,6 +13,4 @@ public interface IProductsRepository : IRepository<ProductEntity>
         ProductFilter productFilter,
         ProductSortParams sortParams,
         PageParams pageParams);
-
-    Task<IEnumerable<ProductEntity>> GetUserProductsAsync(Guid userId);
 }

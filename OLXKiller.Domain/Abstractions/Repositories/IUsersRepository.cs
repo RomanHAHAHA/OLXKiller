@@ -10,4 +10,6 @@ public interface IUsersRepository : IRepository<UserEntity>
     Task<UserEntity?> GetByIdWithAvatar(Guid userId);
 
     Task<HashSet<Permission>> GetUserPermissions(Guid userId);
+
+    Task<IEnumerable<UserEntity>> GetGroupedUsers();
 }

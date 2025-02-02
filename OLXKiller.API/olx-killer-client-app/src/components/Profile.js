@@ -27,7 +27,7 @@ const Profile = () => {
 };
 
 const NavItem = ({ to, icon, label }) => (
-  <div className="w-full mb-4"> {/* Добавлен отступ между кнопками */}
+  <div className="w-full mb-4">
     <NavLink
       to={to}
       className={({ isActive }) =>

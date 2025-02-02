@@ -21,14 +21,10 @@ public class UserConfiguration : IEntityTypeConfiguration<UserEntity>
         builder.Property(u => u.HashedPassword);
 
         builder.HasOne(u => u.Avatar)
-            .WithOne(a => a.User)
-            .OnDelete(DeleteBehavior.Cascade);
+            .WithOne(a => a.User);
 
-        builder.HasMany(u => u.ProductsForSale)
-            .WithOne(p => p.Seller)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        builder.Navigation(u => u.LikedProducts);
+        builder.HasMany(u => u.LikedProducts)
+            .WithMany(p => p.UsersWhoLiked);
 
         builder.Property(u => u.RoleId).HasDefaultValue(1);
 

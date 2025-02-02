@@ -17,7 +17,9 @@ using OLXKiller.Persistence.Contexts;
 using OLXKiller.Persistence.Repositories;
 using ProjectX.Infrastructure.Repositories;
 
-//TODO: add frontend (create product, add images, collection page with sorting and filter)
+//TODO: извлечение пользователей(ник, аватар), сгруппированных по роли с возможностью поиска по почте
+//TODO: фронт к первому пункту
+//TODO: add frontend (collection page with sorting and filter)
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../utils/AuthContext";
 
 const Menu = () => {
   const { isAuthorized, userData, login, logout } = useAuth();
+  const [canAssignRole, setCanAssignRole] = useState(false);
 
   const checkAuthorization = async () => {
     try {
@@ -11,24 +12,44 @@ const Menu = () => {
         method: "GET",
         credentials: "include",
       });
-      if (response.ok) {
-        const userResponse = await fetch("https://localhost:7208/api/Users/get-view-data", {
-          method: "GET",
-          credentials: "include",
-        });
-        if (userResponse.ok) {
-          const jsonResponse = await userResponse.json();
-          login({
-            nickName: jsonResponse.data.nickName,
-            avatar64String: jsonResponse.data.avatar64String,
-          });
-        }
-      } else {
+
+      if (!response.ok) {
         logout();
+        return;
+      }
+
+      const userResponse = await fetch("https://localhost:7208/api/Users/get-view-data", {
+        method: "GET",
+        credentials: "include",
+      });
+
+      if (userResponse.ok) {
+        const jsonResponse = await userResponse.json();
+
+        login({
+          nickName: jsonResponse.data.nickName,
+          avatarBytes: jsonResponse.data.avatarBytes,  
+        });
+
+        checkPermission("AssignRoleToUser");
       }
     } catch (error) {
       console.error("Error checking authorization:", error);
       logout();
+    }
+  };
+
+  const checkPermission = async (permission) => {
+    try {
+      const response = await fetch(`https://localhost:7208/api/Permissions/has-permission?permission=${permission}`, {
+        method: "GET",
+        credentials: "include",
+      });
+
+      setCanAssignRole(response.ok);
+    } catch (error) {
+      console.error("Error checking permission:", error);
+      setCanAssignRole(false);
     }
   };
 
@@ -47,6 +68,11 @@ const Menu = () => {
                 <Link className="nav-link" to="/create-product">Create product</Link>
               </li>
             )}
+            {canAssignRole && (
+              <li className="nav-item">
+                <Link className="nav-link" to="/users">Users</Link>
+              </li>
+            )}
             {!isAuthorized ? (
               <li className="nav-item">
                 <Link className="nav-link" to="/login">Login</Link>
@@ -58,13 +84,13 @@ const Menu = () => {
                     {userData?.nickName || "Profile"}
                   </Link>
                 </li>
-                {userData?.avatar64String && (
+                {userData?.avatarBytes && (
                   <li className="nav-item">
                     <img
-                      src={`data:image/png;base64,${userData.avatar64String}`}
+                      src={`data:image/png;base64,${userData.avatarBytes}`}
                       alt="User Avatar"
                       className="user-avatar"
-                      style={{ width: '30px', height: '30px', borderRadius: '50%' }}
+                      style={{ width: '40px', height: '40px', borderRadius: '50%' }}
                     />
                   </li>
                 )}

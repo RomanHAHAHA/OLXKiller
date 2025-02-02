@@ -24,8 +24,6 @@ public interface IProductsService
         PageParams pageParams, 
         Guid currentUserId);
 
-    Task<IEnumerable<CollectionProductDto>> GetUserProductsAsync(Guid userId);
-
     Task<IBaseResponse<SingleProductDto>> GetProductInfoAsync(
         Guid productId, Guid currentUserId);
 

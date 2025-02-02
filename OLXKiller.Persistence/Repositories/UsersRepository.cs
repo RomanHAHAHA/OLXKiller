@@ -35,13 +35,20 @@ public class UsersRepository(AppDbContext appDbContext) :
             .ToHashSet();
     }
 
-    public override Task RemoveAsync(UserEntity entity)
+    public async Task<IEnumerable<UserEntity>> GetGroupedUsers()
     {
-        var likesToRemove = _appDbContext.Likes
-          .Where(like => like.UserId == entity.Id);
-
-        _appDbContext.Likes.RemoveRange(likesToRemove);
-
-        return base.RemoveAsync(entity);
+        return await GetAllAsync()
+            .AsNoTracking()
+            .AsSplitQuery()
+            .Include(u => u.Role)
+            .Include(u => u.Avatar)
+            .Select(u => new UserEntity
+            {
+                Id = u.Id,
+                NickName = u.NickName,
+                Role = u.Role,
+                Avatar = u.Avatar,
+            })
+            .ToListAsync();
     }
 }

@@ -4,11 +4,11 @@ public class LoginedUserViewDto
 {
     public string NickName { get; set; } = string.Empty;
 
-    public string Avatar64String { get; set; } = string.Empty;
+    public byte[] AvatarBytes { get; set; } = [];
 
-    public LoginedUserViewDto(string nickName, string avatarBase64String)
+    public LoginedUserViewDto(string nickName, byte[] avatarBase64String)
     {
         NickName = nickName;
-        Avatar64String = avatarBase64String;
+        AvatarBytes = avatarBase64String;
     }
 }

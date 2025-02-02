@@ -5,7 +5,6 @@ using OLXKiller.API.Extensions;
 using OLXKiller.Application.Abstractions;
 using OLXKiller.Application.Dtos.User;
 using OLXKiller.Application.Options;
-using System.Net;
 
 namespace OLXKiller.API.Controllers;
 

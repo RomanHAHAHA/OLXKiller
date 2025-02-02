@@ -11,17 +11,11 @@ namespace OLXKiller.API.Controllers;
 [ApiController]
 public class RolesController(IRolesService _rolesService) : ControllerBase
 {
-    [HttpGet]
-    public async Task<IEnumerable<RoleForSelectDto>> GetRoles()
-    {
-        return await _rolesService.GetRolesForSelectAsync();
-    }
-
-    [HttpPost("assign-to-user")]
+    [HttpPost("assign-to-user/{userId:guid}/{roleId:int}")]
     [HasPermission(Permission.AssignRoleToUser)]
-    public async Task<IActionResult> AssignRoleToUser(string userEmail, int roleId)
+    public async Task<IActionResult> AssignRoleToUser(Guid userId, int roleId)
     {
-        var response = await _rolesService.AssignRoleToUserAsync(userEmail, roleId);
+        var response = await _rolesService.AssignRoleToUserAsync(userId, roleId);
 
         if (response.IsSuccess)
         {

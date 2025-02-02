@@ -21,11 +21,7 @@ public class ProductEntity
 
     public int Amount { get; set; }
 
-    public Guid SellerId { get; set; }
-
-    public UserEntity? Seller { get; set; }
-
     public ICollection<ProductImageEntity> Images { get; set; } = [];
 
-    public ICollection<ProductUserLikeEntity> UsersWhoLiked { get; set; } = [];
+    public ICollection<UserEntity> UsersWhoLiked { get; set; } = [];
 }

@@ -5,9 +5,9 @@ namespace OLXKiller.Application.Abstractions;
 
 public interface IUsersService
 {
-    Task<IBaseResponse> CreateAvatar(Stream imageStream, Guid userId);
-
-    Task<IBaseResponse> UpdateAvatar(Stream imageStream, Guid userId);
+    Task<IBaseResponse> SetAvatarAsync(Stream imageStream, Guid userId);
 
     Task<IBaseResponse<LoginedUserViewDto>> GetLoginedUserView(Guid userId);
+
+    Task<IEnumerable<CollectionUserDto>> GetGroupedUsers();
 }

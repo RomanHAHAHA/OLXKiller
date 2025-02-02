@@ -19,9 +19,9 @@ public class RolesService(
             .Select(r => new RoleForSelectDto(r))
             .ToListAsync();
 
-    public async Task<IBaseResponse> AssignRoleToUserAsync(string email, int roleId)
+    public async Task<IBaseResponse> AssignRoleToUserAsync(Guid userId, int roleId)
     {
-        var user = await _usersRepository.GetByEmailAsync(email);
+        var user = await _usersRepository.GetByIdAsync(userId);
 
         if (user is null)
             return new BaseResponse(

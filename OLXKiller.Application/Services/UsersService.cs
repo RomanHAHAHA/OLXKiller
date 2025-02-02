@@ -16,40 +16,23 @@ public class UsersService(
     IUsersRepository _usersRepository,
     IRepository<UserAvatarEntity> _avatarsRepository,
     IImageManager _imageManager,
-    IOptions<ImageManagerOptions> _imageManagerOptions) : IUsersService
+    IOptions<ImageManagerOptions> _imageOptions) : IUsersService
 {
-    public async Task<IBaseResponse> CreateAvatar(Stream imageStream, Guid userId)
+    public async Task<IBaseResponse> SetAvatarAsync(Stream imageStream, Guid userId)
     {
         var userAvatar = await _avatarsRepository.GetByIdAsync(userId);
+        var imageData = imageStream.ConvertToBytes();
 
         if (userAvatar is not null)
         {
-            return new BaseResponse(
-                HttpStatusCode.Conflict,
-                "You already have an avatar!");
+            userAvatar.Data = imageData;
+            await _avatarsRepository.UpdateAsync(userAvatar);
+
+            return new BaseResponse(HttpStatusCode.OK);
         }
 
-        var imageData = imageStream.ConvertToBytes();
         var avatarEntity = new UserAvatarEntity(userId, imageData);
         await _avatarsRepository.CreateAsync(avatarEntity);
-
-        return new BaseResponse(HttpStatusCode.OK);
-    }
-
-    public async Task<IBaseResponse> UpdateAvatar(Stream imageStream, Guid userId)
-    {
-        var userAvatar = await _avatarsRepository.GetByIdAsync(userId);
-
-        if (userAvatar is null)
-        {
-            return new BaseResponse(
-                HttpStatusCode.NotFound,
-                "You dont have an avatar yet!");
-        }
-
-        var imageData = imageStream.ConvertToBytes();
-        userAvatar.Data = imageData;
-        await _avatarsRepository.UpdateAsync(userAvatar);
 
         return new BaseResponse(HttpStatusCode.OK);
     }
@@ -65,17 +48,28 @@ public class UsersService(
                 "User with such id not found");
         }
 
-        var image64String = user.Avatar is null
-            ? Convert.ToBase64String(
-                await _imageManager.GetDefaultBytesAsync(
-                    _imageManagerOptions.Value.DefaultProductImageName))
-            : Convert.ToBase64String(
-                user.Avatar.Data ?? []);
+        var imageBytes = user.Avatar is null ? 
+            await _imageManager.GetDefaultBytesAsync(_imageOptions.Value.DefaultAvatarImageName) : 
+            user.Avatar.Data ?? [];
 
-        var userView = new LoginedUserViewDto(user.NickName, image64String);
+        var userView = new LoginedUserViewDto(user.NickName, imageBytes);
 
         return new BaseResponse<LoginedUserViewDto>(
-            HttpStatusCode.OK,
-            data: userView);
+            HttpStatusCode.OK, data: userView);
+    }
+
+    public async Task<IEnumerable<CollectionUserDto>> GetGroupedUsers()
+    {
+        var users = await _usersRepository.GetGroupedUsers();
+        var dtos = await Task.WhenAll(users.Select(async u => new CollectionUserDto
+        {
+            Id = u.Id,
+            NickName = u.NickName,
+            RoleName = u.Role?.Name ?? "Unknown",
+            AvatarBytes = u.Avatar?.Data ?? 
+               await _imageManager.GetDefaultBytesAsync(_imageOptions.Value.DefaultAvatarImageName)
+        }));
+
+        return dtos;
     }
 }

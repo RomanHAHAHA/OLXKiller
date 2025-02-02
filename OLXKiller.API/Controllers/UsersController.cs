@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OLXKiller.API.Authentication;
 using OLXKiller.API.Extensions;
 using OLXKiller.Application.Abstractions;
+using OLXKiller.Domain.Enums;
 
 namespace OLXKiller.API.Controllers;
 
@@ -24,12 +26,12 @@ public class UsersController(
         return NotFound(new { description = response.Description });
     }
 
-    [HttpPost("create-avatar")]
+    [HttpPost("set-avatar")]
     [Authorize]
-    public async Task<IActionResult> CreateAvatar(IFormFile image)
+    public async Task<IActionResult> SetAvatar(IFormFile image)
     {
         using var stream = image.OpenReadStream();
-        var response = await _usersService.CreateAvatar(stream, User.GetId());
+        var response = await _usersService.SetAvatarAsync(stream, User.GetId());
 
         if (response.IsSuccess)
         {
@@ -39,19 +41,12 @@ public class UsersController(
         return Conflict(new { description = response.Description });
     }
 
-    [HttpPost("update-avatar")]
-    [Authorize]
-    public async Task<IActionResult> UpdateAvatar(IFormFile image)
+    [HttpGet("grouped-by-role")]
+    [HasPermission(Permission.AssignRoleToUser)]
+    public async Task<IActionResult> GetAllAppUsers()
     {
-        using var stream = image.OpenReadStream();
-        var response = await _usersService.UpdateAvatar(stream, User.GetId());
+        var users = await _usersService.GetGroupedUsers();
 
-        if (response.IsSuccess)
-        {
-            return Ok();
-        }
-
-        return NotFound(new { description = response.Description });
+        return Ok(new { data = users });
     }
-
 }

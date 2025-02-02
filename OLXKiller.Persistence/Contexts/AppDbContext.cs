@@ -13,8 +13,6 @@ public class AppDbContext : DbContext
 
     public DbSet<ProductImageEntity> ProductImages { get; set; }
 
-    public DbSet<ProductUserLikeEntity> Likes { get; set; }
-
     public DbSet<PermissionEntity> Permissions { get; set; }
 
     public DbSet<RoleEntity> Roles { get; set; }

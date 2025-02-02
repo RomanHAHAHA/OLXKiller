@@ -81,19 +81,6 @@ public class ProductsController(
 
         return Ok(new { result });
     }
-
-    [HttpGet("userId={userId:guid}")]
-    public async Task<IActionResult> GetUserProducts(Guid userId)
-    {
-        var products = await _productsService.GetUserProductsAsync(userId);
-
-        if (products.Count() == 0)
-        {
-            return NotFound();
-        }
-
-        return Ok(new { products });
-    }
     
     [HttpGet("productId={productId:guid}")]
     public async Task<IActionResult> GetProductInfo(Guid productId)

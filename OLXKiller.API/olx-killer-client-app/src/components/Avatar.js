@@ -6,25 +6,25 @@ const Avatar = () => {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchAvatar = async () => {
-      try {
-        const response = await fetch("https://localhost:7208/api/Users/get-view-data", {
-          method: "GET",
-          credentials: "include",
-        });
+  const fetchAvatar = async () => {
+    try {
+      const response = await fetch("https://localhost:7208/api/Users/get-view-data", {
+        method: "GET",
+        credentials: "include",
+      });
 
-        if (!response.ok) {
-          throw new Error("Error fetching avatar");
-        }
-
-        const data = await response.json();
-        setAvatar(data.data.avatar64String);
-      } catch (error) {
-        console.error(error);
+      if (!response.ok) {
+        throw new Error("Error fetching avatar");
       }
-    };
 
+      const data = await response.json();
+      setAvatar(data.data.avatarBytes);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
     fetchAvatar();
   }, []);
 
@@ -41,7 +41,7 @@ const Avatar = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("https://localhost:7208/api/users/update-avatar", {
+      const response = await fetch("https://localhost:7208/api/users/set-avatar", {
         method: "POST",
         body: formData,
         credentials: "include",
@@ -50,24 +50,6 @@ const Avatar = () => {
       if (!response.ok) {
         throw new Error("Error updating avatar");
       }
-
-      const fetchAvatar = async () => {
-        try {
-          const response = await fetch("https://localhost:7208/api/Users/get-view-data", {
-            method: "GET",
-            credentials: "include",
-          });
-
-          if (!response.ok) {
-            throw new Error("Error fetching avatar");
-          }
-
-          const data = await response.json();
-          setAvatar(data.data.avatar64String);
-        } catch (error) {
-          console.error(error);
-        }
-      };
 
       fetchAvatar();
       alert("Avatar updated!");

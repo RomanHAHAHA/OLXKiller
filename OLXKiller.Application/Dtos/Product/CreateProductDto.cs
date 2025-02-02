@@ -12,7 +12,7 @@ public class CreateProductDto
 
     public int? Amount { get; set; }
 
-    public ProductEntity AsEntity(Guid sellerId)
+    public ProductEntity AsEntity()
     {
         return new ProductEntity
         {
@@ -21,7 +21,6 @@ public class CreateProductDto
             Description = Description,
             Price = Price ?? decimal.Zero,
             Amount = Amount ?? 0,
-            SellerId = sellerId
         };
     }
 }

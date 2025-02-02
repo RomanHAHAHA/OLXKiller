@@ -1,0 +1,60 @@
+/* Контейнер для всего */
+.users-container {
+  padding: 10px;
+}
+
+/* Карточки пользователей */
+.user-card {
+  background-color: #343a40;
+  color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+}
+
+.user-info {
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.user-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.ml-3 {
+  margin-left: 15px;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+  margin-top: 10px;
+  font-weight: bold;
+  color: #fff !important;
+}
+
+.card-role {
+  font-size: 0.9rem;
+  color: #cccccc;
+}
+
+.user-card:hover {
+  transform: scale(1.01);
+}
+
+.role-change-btn {
+  background-color: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.role-change-btn:hover {
+  color: #007bff;
+}
+

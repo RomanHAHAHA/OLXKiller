@@ -26,7 +26,7 @@ public class ProductsService(
             return new BaseResponse<Guid>(
                 HttpStatusCode.NotFound, "Seller was not found");
 
-        var product = productDto.AsEntity(sellerId);
+        var product = productDto.AsEntity();
         
         await _productsRepository.CreateAsync(product);
 
@@ -113,16 +113,6 @@ public class ProductsService(
             HttpStatusCode.OK, data: dto);
     }
 
-    public async Task<IEnumerable<CollectionProductDto>> GetUserProductsAsync(Guid userId)
-    {
-        var products = await _productsRepository.GetUserProductsAsync(userId);
-
-        var dtos = await Task.WhenAll(products
-            .Select(async p => await _productDtoFactory.CreateCollectionDtoAsync(p, userId)));
-
-        return dtos;
-    }
-    //TODO:refactor
     public async Task<IBaseResponse> LikeProduct(Guid productId, Guid userId)
     {
         var user = await _usersRepository.GetByIdAsync(userId);
@@ -130,23 +120,14 @@ public class ProductsService(
         if (user is null)
             return new BaseResponse(
                 HttpStatusCode.NotFound, "User was not found");
-        
-        var product = await _productsRepository.GetByIdWithLikes(productId);
+
+        var product = await _productsRepository.GetByIdAsync(userId);
 
         if (product is null)
             return new BaseResponse(
                 HttpStatusCode.NotFound, "Product was not found");
-        
-        var existingLike = product.UsersWhoLiked
-            .FirstOrDefault(l => l.ProductId == productId && l.UserId == userId);
 
-        if (existingLike is not null)
-            return new BaseResponse(
-                HttpStatusCode.BadRequest, "Like already exists");
-
-        var like = new ProductUserLikeEntity(productId, userId);
-
-        product.UsersWhoLiked.Add(like);
+        product.UsersWhoLiked.Add(user);
         await _productsRepository.UpdateAsync(product);
 
         return new BaseResponse(HttpStatusCode.OK);
@@ -160,20 +141,13 @@ public class ProductsService(
             return new BaseResponse(
                 HttpStatusCode.NotFound, "User was not found");
 
-        var product = await _productsRepository.GetByIdWithLikes(productId);
+        var product = await _productsRepository.GetByIdAsync(userId);
 
         if (product is null)
             return new BaseResponse(
                 HttpStatusCode.NotFound, "Product was not found");
 
-        var like = product.UsersWhoLiked
-            .FirstOrDefault(l => l.ProductId == productId && l.UserId == userId);
-
-        if (like is null)
-            return new BaseResponse(
-                HttpStatusCode.NotFound, "Like was not found");
-
-        product.UsersWhoLiked.Remove(like);
+        product.UsersWhoLiked.Remove(user);
         await _productsRepository.UpdateAsync(product);
 
         return new BaseResponse(HttpStatusCode.OK);

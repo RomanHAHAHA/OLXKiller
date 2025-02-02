@@ -9,6 +9,7 @@ import Products from "./components/Products";
 import CreateProductForm from "./components/CreateProductForm";
 import ProductInfo from "./components/ProductInfo";
 import Avatar from "./components/Avatar"; // Добавляем компонент Avatar
+import Users from "./components/Users";
 
 function App() {
   return (
@@ -21,8 +22,9 @@ function App() {
               <Route path="/" element={<Products />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/profile/*" element={<Profile />}> {/* Используем /profile/* для вложенных маршрутов */}
-                <Route path="avatar" element={<Avatar />} /> {/* Добавляем вложенные маршруты */}
+              <Route path="/users" element={<Users />} />
+              <Route path="/profile/*" element={<Profile />}> 
+                <Route path="avatar" element={<Avatar />} /> 
               </Route>
               <Route path="/create-product" element={<CreateProductForm />} />
               <Route path="/products/:productId" element={<ProductInfo />} />

@@ -24,7 +24,7 @@ public class ProductDtoFactory(
         if (!currentUserId.Equals(Guid.Empty))
         {
             liked = productEntity.UsersWhoLiked
-                .FirstOrDefault(like => like.UserId == currentUserId) is not null;
+                .FirstOrDefault(u => u.Id == currentUserId) is not null;
         }
 
         return new CollectionProductDto
@@ -52,12 +52,8 @@ public class ProductDtoFactory(
         if (!currentUserId.Equals(Guid.Empty))
         {
             liked = productEntity.UsersWhoLiked
-                .FirstOrDefault(like => like.UserId == currentUserId) is not null;
+                .FirstOrDefault(u => u.Id == currentUserId) is not null;
         }
-
-        var sellerAvatar = Convert.ToBase64String(
-            productEntity?.Seller?.Avatar?.Data ??
-            await _imageManager.GetDefaultBytesAsync(_imageOptions.Value.DefaultProductImageName));
 
         return new SingleProductDto
         {
@@ -66,11 +62,8 @@ public class ProductDtoFactory(
             Description = productEntity.Description,
             Price = productEntity.Price,
             Amount = productEntity.Amount,
-            SellerId = productEntity.SellerId,
-            SellerNickName = productEntity?.Seller?.NickName ?? string.Empty,
             Liked = liked,
             ImageStrings = bytes.Select(Convert.ToBase64String),
-            SellerAvatar = sellerAvatar
         };
     }
 }

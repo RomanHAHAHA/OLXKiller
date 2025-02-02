@@ -18,11 +18,5 @@ public class SingleProductDto
 
     public IEnumerable<string> ImageStrings { get; set; } = [];
 
-    public Guid SellerId { get; set; }
-
-    public string SellerNickName { get; set; } = string.Empty;
-
-    public string SellerAvatar { get; set; } = string.Empty;
-
     //review, rating
 }
