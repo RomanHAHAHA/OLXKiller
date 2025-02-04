@@ -13,7 +13,6 @@ public class ProductImageConfiguration : IEntityTypeConfiguration<ProductImageEn
         builder.Property(i => i.Data);
 
         builder.Property(i => i.ProductId);
-
         builder.HasOne(i => i.Product)
             .WithMany(p => p.Images);
     }

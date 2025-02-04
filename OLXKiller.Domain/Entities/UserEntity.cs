@@ -21,6 +21,8 @@ public class UserEntity
 
     public ICollection<ProductEntity> LikedProducts { get; set; } = [];
 
+    public ICollection<CartItemEntity> CartItems { get; set; } = [];
+
     public int RoleId { get; set; }
 
     public RoleEntity? Role { get; set; }

@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OLXKiller.Domain\OLXKiller.Domain.csproj" />
+    <ProjectReference Include="..\OLXKiller.Persistence\OLXKiller.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

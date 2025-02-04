@@ -6,7 +6,7 @@ namespace OLXKiller.API.Extensions;
 
 public static class ControllerExtensions
 {
-    public static IActionResult HandleResponse(
+    public static IActionResult HandleErrorResponse(
         this ControllerBase controller,
         IBaseResponse response)
     {

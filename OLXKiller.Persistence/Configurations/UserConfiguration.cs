@@ -27,8 +27,10 @@ public class UserConfiguration : IEntityTypeConfiguration<UserEntity>
             .WithMany(p => p.UsersWhoLiked);
 
         builder.Property(u => u.RoleId).HasDefaultValue(1);
-
         builder.HasOne(u => u.Role)
             .WithMany(r => r.Users);
+
+        builder.HasMany(u => u.CartItems)
+            .WithOne(ci => ci.User);
     }
 }

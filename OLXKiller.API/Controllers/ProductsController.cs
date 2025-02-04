@@ -103,7 +103,7 @@ public class ProductsController(
 
         if (response.IsFailure)
         {
-            return this.HandleResponse(response);
+            return this.HandleErrorResponse(response);
         }
 
         return Ok();
@@ -117,7 +117,7 @@ public class ProductsController(
 
         if (response.IsFailure)
         {
-            return this.HandleResponse(response);
+            return this.HandleErrorResponse(response);
         }
 
         return Ok();

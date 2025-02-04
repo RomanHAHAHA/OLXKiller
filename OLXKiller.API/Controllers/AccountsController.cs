@@ -43,7 +43,7 @@ public class AccountsController(
 
         if (response.IsFailure)
         {
-            return this.HandleResponse(response);
+            return this.HandleErrorResponse(response);
         }
 
         return Ok();

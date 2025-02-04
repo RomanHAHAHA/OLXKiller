@@ -13,6 +13,7 @@ using OLXKiller.Application.Validators;
 using OLXKiller.Domain.Abstractions.Providers;
 using OLXKiller.Domain.Abstractions.Repositories;
 using OLXKiller.Domain.Entities;
+using OLXKiller.Persistence.Abstractions;
 using OLXKiller.Persistence.Contexts;
 using OLXKiller.Persistence.Repositories;
 using ProjectX.Infrastructure.Repositories;
@@ -29,6 +30,14 @@ builder.Services.AddValidatorsFromAssemblyContaining<LoginUserValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateProductValidator>();
 
+#region DB
+var dbOptions = builder.Configuration
+    .GetSection(nameof(DbOptions))
+    .Get<DbOptions>() ?? throw new NullReferenceException(nameof(DbOptions));
+
+builder.Services.AddSqlServer<AppDbContext>(dbOptions.ConnectionString);
+#endregion
+
 #region Options
 builder.Services.Configure<DbOptions>(builder.Configuration.GetSection(nameof(DbOptions)));
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(nameof(JwtOptions)));
@@ -42,6 +51,9 @@ builder.Services.AddScoped<IRepository<UserAvatarEntity>, UserAvatarsRepository>
 builder.Services.AddScoped<IProductsRepository, ProductsRepository>();
 builder.Services.AddScoped<IProductImagesRepository, ProductImagesRepository>();
 builder.Services.AddScoped<IRolesRepository, RolesRepository>();
+builder.Services.AddScoped<ICartItemsRepository, CartItemsRepository>();
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 #endregion
 
 #region Providers
@@ -56,16 +68,9 @@ builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<IProductsService, ProductsService>();
 builder.Services.AddScoped<IPermissionsService, PermissionsService>();
 builder.Services.AddScoped<IRolesService, RolesService>();
+builder.Services.AddScoped<ICartsService, CartsService>();
 
 builder.Services.AddScoped<IProductDtoFactory, ProductDtoFactory>();
-#endregion
-
-#region DB
-var dbOptions = builder.Configuration
-    .GetSection(nameof(DbOptions))
-    .Get<DbOptions>() ?? throw new NullReferenceException(nameof(DbOptions));
-
-builder.Services.AddSqlServer<AppDbContext>(dbOptions.ConnectionString);
 #endregion
 
 #region Authentication & Authorization

@@ -22,6 +22,6 @@ public class RolesController(IRolesService _rolesService) : ControllerBase
             return Ok();
         }
 
-        return this.HandleResponse(response);
+        return this.HandleErrorResponse(response);
     }
 }
