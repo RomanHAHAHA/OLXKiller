@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using OLXKiller.API.Extensions;
@@ -12,16 +13,25 @@ namespace OLXKiller.API.Controllers;
 [ApiController]
 public class AccountsController(
     IAccountsService _accountsService,
-    IOptions<CustomCookieOptions> _options) : ControllerBase
+    IOptions<CustomCookieOptions> _options,
+    IValidator<UserLoginDto> _userLoginValidator,
+    IValidator<UserRegistrationDto> _userRegistrationValidator) : ControllerBase
 {
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginUserDto loginUserDto)
+    public async Task<IActionResult> Login([FromBody] UserLoginDto loginUserDto)
     {
+        var validationResult = _userLoginValidator.Validate(loginUserDto);
+
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(new { errors = validationResult.ToDictionary() });
+        }
+
         var response = await _accountsService.Login(loginUserDto);
 
         if (response.IsFailure)
         {
-            return this.HandleResponse(response);
+            return this.HandleErrorResponse(response);
         }
 
         var token = response.Data;
@@ -37,8 +47,15 @@ public class AccountsController(
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterUserDto registerUserDto)
+    public async Task<IActionResult> Register([FromBody] UserRegistrationDto registerUserDto)
     {
+        var validationResult = _userRegistrationValidator.Validate(registerUserDto);
+
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(new { errors = validationResult.ToDictionary() });
+        }
+
         var response = await _accountsService.Register(registerUserDto);
 
         if (response.IsFailure)

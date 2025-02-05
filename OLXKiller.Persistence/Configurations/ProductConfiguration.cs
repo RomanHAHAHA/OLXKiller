@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OLXKiller.Domain.Entities;
+using OLXKiller.Persistence.Constraints;
 
 namespace OLXKiller.Persistence.Configurations;
 
@@ -11,10 +12,10 @@ public class ProductConfiguration : IEntityTypeConfiguration<ProductEntity>
         builder.HasKey(p => p.Id);
 
         builder.Property(p => p.Name)
-            .HasMaxLength(ProductEntity.MAX_NAME_LENGTH);
+            .HasMaxLength(ProductDbConstraints.MAX_NAME_LENGTH);
 
         builder.Property(p => p.Description)
-            .HasMaxLength(ProductEntity.MAX_DESCRIPTION_LENGTH);
+            .HasMaxLength(ProductDbConstraints.MAX_DESCRIPTION_LENGTH);
 
         builder.Property(p => p.Price);
         

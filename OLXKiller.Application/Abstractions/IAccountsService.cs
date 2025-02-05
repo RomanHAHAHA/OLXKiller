@@ -5,7 +5,7 @@ namespace OLXKiller.Application.Abstractions;
 
 public interface IAccountsService
 {
-    Task<IBaseResponse<string>> Login(LoginUserDto loginUserDto);
+    Task<IBaseResponse<string>> Login(UserLoginDto loginUserDto);
 
-    Task<IBaseResponse> Register(RegisterUserDto registerUserDto);
+    Task<IBaseResponse> Register(UserRegistrationDto registerUserDto);
 }

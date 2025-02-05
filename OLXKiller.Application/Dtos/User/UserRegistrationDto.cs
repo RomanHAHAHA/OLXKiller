@@ -2,7 +2,7 @@
 
 namespace OLXKiller.Application.Dtos.User;
 
-public class RegisterUserDto
+public class UserRegistrationDto
 {
     public string NickName { get; set; } = string.Empty;
 

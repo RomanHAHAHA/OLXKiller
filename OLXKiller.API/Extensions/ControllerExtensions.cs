@@ -13,7 +13,7 @@ public static class ControllerExtensions
         return CreateResultObject(controller, response.Status, response.Description);
     }
 
-    public static IActionResult HandleResponse<T>(
+    public static IActionResult HandleErrorResponse<T>(
         this ControllerBase controller,
         IBaseResponse<T> response)
     {

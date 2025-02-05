@@ -14,7 +14,7 @@ public class AccountsService(
     IPasswordHasher _passwordHasher,
     IJwtProvider _jwtProvider) : IAccountsService
 {
-    public async Task<IBaseResponse<string>> Login(LoginUserDto loginUserDto)
+    public async Task<IBaseResponse<string>> Login(UserLoginDto loginUserDto)
     {
         var user = await _usersRepository.GetByEmailAsync(loginUserDto.Email);
 
@@ -39,7 +39,7 @@ public class AccountsService(
             data: token);
     }
 
-    public async Task<IBaseResponse> Register(RegisterUserDto registerUserDto)
+    public async Task<IBaseResponse> Register(UserRegistrationDto registerUserDto)
     {
         var userToRegister = registerUserDto.AsUserEntity();
 

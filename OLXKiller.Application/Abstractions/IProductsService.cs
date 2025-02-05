@@ -7,7 +7,7 @@ namespace OLXKiller.Application.Abstractions;
 public interface IProductsService
 {
     Task<IBaseResponse<Guid>> CreateProductAsync(
-        CreateProductDto productDto,
+        ProductCreateDto productDto,
         Guid sellerId);
 
     Task<IBaseResponse> RemoveProductAsync(Guid productId);

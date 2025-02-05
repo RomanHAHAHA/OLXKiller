@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OLXKiller.Domain.Entities;
+using OLXKiller.Persistence.Constraints;
 
 namespace OLXKiller.Persistence.Configurations;
 
@@ -11,14 +12,15 @@ public class UserConfiguration : IEntityTypeConfiguration<UserEntity>
         builder.HasKey(u => u.Id);
 
         builder.Property(u => u.NickName)
-            .HasMaxLength(UserEntity.MAX_NICK_NAME_LENGTH);
+            .HasMaxLength(UserDbConstraints.MAX_NICK_NAME_LENGTH);
 
         builder.Property(u => u.Email)
-            .HasMaxLength(UserEntity.MAX_EMAIL_LENGTH);
+            .HasMaxLength(UserDbConstraints.MAX_EMAIL_LENGTH);
 
         builder.HasIndex(u => u.Email).IsUnique();
 
-        builder.Property(u => u.HashedPassword);
+        builder.Property(u => u.HashedPassword)
+            .HasMaxLength(UserDbConstraints.MAX_PASSWORD_LENGTH);
 
         builder.HasOne(u => u.Avatar)
             .WithOne(a => a.User);

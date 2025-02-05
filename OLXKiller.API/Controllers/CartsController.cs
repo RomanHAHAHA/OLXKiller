@@ -44,6 +44,6 @@ public class CartsController(
     {
         var cartItems = await _cartsService.GetItems(User.GetId());
 
-        return Ok(cartItems);
+        return Ok(new { data = cartItems });
     }
 }

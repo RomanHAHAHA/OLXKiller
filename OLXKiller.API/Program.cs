@@ -24,11 +24,15 @@ using ProjectX.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddFluentValidation();
-builder.Services.AddFluentValidationClientsideAdapters();
-builder.Services.AddValidatorsFromAssemblyContaining<LoginUserValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<CreateProductValidator>();
+#region Validation
+builder.Services.AddValidatorsFromAssembly(typeof(UserLoginDtoValidator).Assembly, includeInternalTypes: true);
+
+builder.Services.Configure<UserValidationSettings>(
+    builder.Configuration.GetSection(nameof(UserValidationSettings)));
+
+builder.Services.Configure<ProductValidationSettings>(
+    builder.Configuration.GetSection(nameof(ProductValidationSettings)));
+#endregion
 
 #region DB
 var dbOptions = builder.Configuration

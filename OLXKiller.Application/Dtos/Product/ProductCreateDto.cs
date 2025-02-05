@@ -2,7 +2,7 @@
 
 namespace OLXKiller.Application.Dtos.Product;
 
-public class CreateProductDto
+public class ProductCreateDto
 {
     public string Name { get; set; } = string.Empty;
 

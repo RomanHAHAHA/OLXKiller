@@ -16,7 +16,7 @@ public class ProductsService(
     IProductDtoFactory _productDtoFactory) : IProductsService
 {
     public async Task<IBaseResponse<Guid>> CreateProductAsync(
-        CreateProductDto productDto,
+        ProductCreateDto productDto,
         Guid sellerId)
     {
         var seller = await _usersRepository

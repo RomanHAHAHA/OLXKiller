@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Writers;
 using OLXKiller.API.Authentication;
 using OLXKiller.API.Extensions;
 using OLXKiller.Application.Abstractions;
@@ -8,29 +8,34 @@ using OLXKiller.Application.Dtos.Product;
 using OLXKiller.Domain.Enums;
 using OLXKiller.Domain.Extensions;
 using OLXKiller.Domain.Models;
-using System.Linq.Expressions;
 
 namespace OLXKiller.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 public class ProductsController(
-    IProductsService _productsService) : ControllerBase
+    IProductsService _productsService,
+    IValidator<ProductCreateDto> _productCreateValidator) : ControllerBase
 {
     [HttpPost("create")]
     [Authorize]
-    public async Task<IActionResult> CreateProduct(
-        [FromBody] CreateProductDto productDto)
+    public async Task<IActionResult> CreateProduct([FromBody] ProductCreateDto productDto)
     {
-        var response = await _productsService
-            .CreateProductAsync(productDto, User.GetId());
+        var validationResult = _productCreateValidator.Validate(productDto);
 
-        if (response.IsSuccess)
+        if (!validationResult.IsValid)
         {
-            return Ok(new { productId = response.Data });
+            return BadRequest(new { errors = validationResult.ToDictionary() });
         }
 
-        return NotFound(new { description = response.Description });
+        var response = await _productsService.CreateProductAsync(productDto, User.GetId());
+
+        if (response.IsFailure)
+        {
+            return this.HandleErrorResponse(response);
+        }
+
+        return Ok(new { productId = response.Data });
     }
 
     [HttpDelete("{productId:guid}")]

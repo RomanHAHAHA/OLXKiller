@@ -1,6 +1,6 @@
 ﻿namespace OLXKiller.Application.Dtos.User;
 
-public class LoginUserDto
+public class UserLoginDto
 {
     public string Email { get; set; } = string.Empty;
 
