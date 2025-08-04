@@ -1,0 +1,86 @@
+html, body {
+    background-color: #121212; 
+    color: white; 
+}
+
+.navbar, .card {
+    background-color: #212529; 
+}
+
+* {
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
+}
+
+*::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.btn-accent-outline {
+  --btn-color: #4ecca3; /* Переменная по умолчанию */
+  --btn-text-color: var(--btn-color);
+  --btn-hover-bg: var(--btn-color);
+  --btn-hover-text: #1a1a2e;
+  --btn-focus-shadow: rgba(78, 204, 163, 0.5);
+
+  background: transparent;
+  border: 2px solid var(--btn-color);
+  color: var(--btn-text-color);
+  font-weight: 500;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+  text-align: center;
+}
+
+/* Состояния кнопки */
+.btn-accent-outline:hover {
+  background-color: var(--btn-hover-bg);
+  color: var(--btn-hover-text);
+}
+
+.btn-accent-outline:disabled {
+  border-color: #6c757d;
+  color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.btn-accent-outline:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--btn-focus-shadow);
+}
+
+/* Модификаторы цвета */
+.btn-accent-outline.red {
+  --btn-color: #f1416c;
+  --btn-hover-bg: #f1416c;
+  --btn-hover-text: #fff;
+  --btn-focus-shadow: rgba(241, 65, 108, 0.5);
+}
+
+.btn-accent-outline.blue {
+  --btn-color: #3699ff;
+  --btn-hover-bg: #3699ff;
+  --btn-hover-text: #fff;
+  --btn-focus-shadow: rgba(54, 153, 255, 0.5);
+}
+
+.btn-accent-outline.yellow {
+  --btn-color: #ffc700;
+  --btn-hover-bg: #ffc700;
+  --btn-hover-text: #1a1a2e;
+  --btn-focus-shadow: rgba(255, 199, 0, 0.5);
+}
+
+/* Иконка внутри кнопки */
+.btn-accent-outline .btn-accent-icon {
+  color: inherit;
+}

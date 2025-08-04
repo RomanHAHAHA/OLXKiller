@@ -1,0 +1,220 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #1e1e1e;
+  color: #e0e0e0;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #ffffff;
+  border-bottom: 1px solid #444;
+  padding-bottom: 10px;
+}
+
+.chatList {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.chatItem {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  background-color: #2d2d2d;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.chatItem:hover {
+  background-color: #3a3a3a;
+}
+
+.avatarContainer {
+  position: relative;
+  margin-right: 15px;
+  width: 50px;
+  height: 50px;
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #4a6fa5;
+}
+
+.statusIndicator {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #2d2d2d;
+  box-sizing: content-box;
+}
+
+.statusIndicator.online {
+  background-color: #4CAF50;
+}
+
+.statusIndicator.offline {
+  background-color: #9E9E9E;
+}
+
+.unreadBadge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #ff4757;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.chatInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.userName {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 5px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.statusText {
+  font-size: 0.75rem;
+  color: #a0a0a0;
+  margin-left: 8px;
+  font-weight: normal;
+  white-space: nowrap;
+}
+
+.statusText.online {
+  color: #4CAF50;
+}
+
+.lastMessageTime {
+  font-size: 14px;
+  color: #a0a0a0;
+  white-space: nowrap;
+}
+
+.chatActions {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: #a0a0a0;
+  transition: all 0.2s;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+  flex-shrink: 0;
+}
+
+.chatActions:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.chatActions.muted {
+  color: #ff4757;
+}
+
+.chatActions.muted:hover {
+  background-color: rgba(255, 71, 87, 0.1);
+}
+
+.chatActions:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #ffffff;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading {
+  text-align: center;
+  padding: 20px;
+  color: #a0a0a0;
+}
+
+.error {
+  text-align: center;
+  padding: 20px;
+  color: #ff4757;
+}
+
+.noChats {
+  text-align: center;
+  padding: 20px;
+  color: #a0a0a0;
+  font-style: italic;
+}
+
+/* Адаптация для мобильных устройств */
+@media (max-width: 600px) {
+  .container {
+    padding: 15px;
+    border-radius: 0;
+  }
+
+  .chatItem {
+    padding: 12px;
+  }
+
+  .avatarContainer {
+    width: 45px;
+    height: 45px;
+    margin-right: 12px;
+  }
+
+  .userName {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .statusText {
+    margin-left: 0;
+    font-size: 0.7rem;
+  }
+
+  .lastMessageTime {
+    font-size: 0.8rem;
+  }
+}

@@ -1,0 +1,39 @@
+.swal-dark-confirm {
+  background-color: #6366f1 !important;
+  color: white !important;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.375rem;
+  border: none;
+  transition: all 0.2s;
+  margin: 10px;
+}
+
+.swal-dark-confirm:hover {
+  background-color: #4f46e5 !important;
+}
+
+.swal-dark-cancel {
+  background-color: #374151 !important;
+  color: #e5e7eb !important;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.375rem;
+  border: none;
+  margin-right: 0.75rem;
+  transition: all 0.2s;
+}
+
+.swal-dark-cancel:hover {
+  background-color: #4b5563 !important;
+}
+
+.swal2-popup.dark\:bg-gray-800 {
+  background-color: #1f2937;
+}
+
+.swal2-title.dark\:text-white {
+  color: #f9fafb;
+}
+
+.swal2-html-container.dark\:text-gray-200 {
+  color: #e5e7eb;
+}

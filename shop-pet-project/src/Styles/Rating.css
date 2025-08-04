@@ -1,0 +1,47 @@
+.rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.rating-star {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: default;
+}
+
+.rating-star.interactive {
+  cursor: pointer;
+}
+
+.rating-star svg {
+  display: block;
+  fill: transparent;
+  stroke: #e5e7eb; /* Цвет пустых звезд */
+  stroke-width: 1.5;
+  transition: all 0.2s ease;
+}
+
+.rating-star.active svg {
+  fill: currentColor;
+  stroke: currentColor;
+}
+
+.rating-star.interactive:hover svg {
+  transform: scale(1.1);
+}
+
+/* Цвета активных звезд */
+.rating--gold .rating-star.active { color: #fbbf24; }
+.rating--purple .rating-star.active { color: #a855f7; }
+.rating--pink .rating-star.active { color: #ec4899; }
+.rating--blue .rating-star.active { color: #3b82f6; }
+.rating--green .rating-star.active { color: #22c55e; }
+.rating--red .rating-star.active { color: #ef4444; }
+
+/* Размеры */
+.rating--sm svg { width: 16px; height: 16px; }
+.rating--md svg { width: 24px; height: 24px; }
+.rating--lg svg { width: 32px; height: 32px; }
+.rating--xl svg { width: 40px; height: 40px; }

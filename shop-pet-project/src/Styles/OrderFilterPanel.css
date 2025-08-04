@@ -1,0 +1,194 @@
+.order-filter-panel {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 320px; /* Немного шире для лучшего размещения элементов */
+    background-color: #ffffff; /* Светлый фон как у карточек */
+    color: #333333;
+    border-right: 1px solid #e0e0e0; /* Более мягкая граница */
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.08); /* Мягкая тень */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Плавная анимация */
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding: 0; /* Убираем внутренний отступ для header */
+}
+
+.order-filter-panel.collapsed {
+    width: 50px;
+    overflow: hidden;
+}
+
+.filter-header {
+    padding: 16px 20px;
+    background-color: #f8f9fa; /* Светлый фон заголовка */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    border-bottom: 1px solid #e0e0e0;
+    transition: background-color 0.2s ease;
+}
+
+.filter-header:hover {
+    background-color: #f1f3f5;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.filter-icon {
+    font-size: 18px;
+    color: #6c5ce7;
+}
+
+h3, h4 {
+    margin: 0;
+    font-weight: 500;
+}
+
+h3 {
+    font-size: 1.1rem;
+    color: #333333;
+}
+
+h4 {
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+    color: #666666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.filter-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.reset-btn {
+    background: none;
+    border: none;
+    color: #666666;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.reset-btn:hover {
+    color: #6c5ce7;
+    background: rgba(108, 92, 231, 0.1);
+}
+
+.collapse-icon {
+    color: #666666;
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s;
+}
+
+.order-filter-panel.collapsed .collapse-icon {
+    transform: rotate(-90deg);
+}
+
+.filter-content {
+    padding: 20px;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.filter-section {
+    margin-bottom: 24px;
+}
+
+.filter-group {
+    margin-bottom: 16px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.85rem;
+    color: #555555;
+    font-weight: 500;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px 12px;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    color: #333333;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    box-sizing: border-box; /* Важно для правильного расчета ширины */
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: #6c5ce7;
+    box-shadow: 0 0 0 2px rgba(108, 92, 231, 0.15);
+}
+
+.filter-row {
+    display: flex;
+    gap: 12px;
+}
+
+.filter-row .filter-group {
+    flex: 1;
+    margin-bottom: 0;
+    min-width: 0; /* Предотвращает переполнение */
+}
+
+/* Стили для date inputs */
+input[type="date"] {
+    padding: 9px 12px; /* Чуть меньше padding для выравнивания */
+}
+
+/* Стили для скроллбара */
+.order-filter-panel::-webkit-scrollbar {
+    width: 6px;
+}
+
+.order-filter-panel::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.order-filter-panel::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.order-filter-panel::-webkit-scrollbar-thumb:hover {
+    background: #a1a1a1;
+}
+
+@media (max-width: 768px) {
+    .order-filter-panel {
+        width: 280px;
+        top: 0;
+        bottom: 0;
+        transform: translateX(-100%);
+        z-index: 1000;
+    }
+    
+    .order-filter-panel.collapsed {
+        transform: translateX(-100%);
+    }
+    
+    .order-filter-panel.active {
+        transform: translateX(0);
+    }
+}

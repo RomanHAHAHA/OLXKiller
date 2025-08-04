@@ -1,0 +1,293 @@
+.card {
+  background: #1e1e2d;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  border: 1px solid #2d2d3d;
+  transition: all 0.3s ease;
+  margin-bottom: 16px;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  width: 100%; 
+  max-width: 100%; 
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #2a2a3a;
+  border-bottom: 1px solid #3a3a4a;
+}
+
+.orderId {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 0.3px;
+}
+
+.orderDate {
+  font-size: 13px;
+  color: #a0a0c0;
+  font-weight: 400;
+}
+
+.userSection {
+  display: flex;
+  align-items: center;
+  padding: 14px 20px;
+  gap: 14px;
+  border-bottom: 1px solid #3a3a4a;
+}
+
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #4a4a6a;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.userName {
+  font-size: 15px;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.userId {
+  font-size: 12px;
+  color: #a0a0c0;
+  font-weight: 400;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 8px 20px 12px;
+  text-transform: capitalize;
+}
+
+.statusProcessing { background: rgba(101, 117, 255, 0.15); color: #6575ff; }
+.statusConfirmed { background: rgba(46, 204, 113, 0.15); color: #2ecc71; }
+.statusShipped { background: rgba(255, 168, 0, 0.15); color: #ffa800; }
+.statusDelivered { background: rgba(0, 210, 144, 0.15); color: #00d290; }
+.statusPayed { background: rgba(155, 81, 224, 0.15); color: #9b51e0; }
+.statusReceived { background: rgba(0, 181, 204, 0.15); color: #00b5cc; }
+.statusCanceled { background: rgba(235, 87, 87, 0.15); color: #eb5757; }
+.statusFailed { background: rgba(130, 130, 130, 0.15); color: #828282; }
+
+.contentSection {
+  padding: 0 20px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.contentExpanded {
+  max-height: 1000px;
+  padding-bottom: 16px;
+}
+
+.sectionTitle {
+  font-size: 13px;
+  color: #a0a0c0;
+  margin: 20px 0 12px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.itemList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-left: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.itemImage {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid #3a3a4a;
+  flex-shrink: 0;
+}
+
+.itemDetails {
+  flex: 1;
+  min-width: 0;
+}
+
+.itemName {
+  font-size: 14px;
+  color: #ffffff;
+  margin-bottom: 6px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.itemPrice {
+  font-size: 13px;
+  color: #a0a0c0;
+  display: flex;
+  gap: 8px;
+}
+
+.deliveryInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.deliveryText {
+  font-size: 14px;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.deliverySubtext {
+  font-size: 13px;
+  color: #a0a0c0;
+  line-height: 1.4;
+}
+
+.statusHistory {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-left: 0;
+  list-style: none;
+}
+
+.statusItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.statusLabel {
+  font-size: 13px;
+  padding: 5px 12px;
+  border-radius: 12px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.statusDate {
+  font-size: 12px;
+  color: #a0a0c0;
+  font-weight: 400;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #2a2a3a;
+  border-top: 1px solid #3a3a4a;
+}
+
+.totalPrice {
+  font-size: 17px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.detailsButton {
+  background: #3a3a5a;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+  height: 36px;
+  width: 200px;
+}
+
+.detailsButton:hover {
+  background: #4a4a6a;
+}
+
+.statusSelect {
+  background: #3a3a5a;
+  color: #ffffff;
+  border: 1px solid #4a4a6a;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  min-width: 140px;
+  height: 36px;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+}
+
+.statusSelect:focus {
+  outline: none;
+  border-color: #6a6a8a;
+}
+
+.errorMessage {
+  padding: 10px 20px;
+  background-color: rgba(235, 87, 87, 0.1);
+  color: #eb5757;
+  font-size: 13px;
+  text-align: center;
+}
+
+.loadingIndicator {
+  font-size: 13px;
+  color: #a0a0c0;
+}
+
+@media (max-width: 480px) {
+  .header, .userSection {
+    padding: 14px 16px;
+  }
+  
+  .controls {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .statusSelect {
+    min-width: 120px;
+  }
+}

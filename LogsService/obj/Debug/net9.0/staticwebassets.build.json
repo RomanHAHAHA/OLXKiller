@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "VCMA+mmk49kDcBqs7bEviEvjJXWp8t8C2PrSKnJgyWQ=",
+  "Source": "LogsService",
+  "BasePath": "_content/LogsService",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

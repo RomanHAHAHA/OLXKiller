@@ -1,0 +1,301 @@
+/* Основной контейнер чата */
+.chatContainer {
+  display: flex;
+  flex-direction: column;
+  height: 530px;
+  background: #0f0f0f;
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Шапка чата */
+.chatHeader {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  background: #1a1a1a;
+  border-bottom: 1px solid #2a2a2a;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* Кнопка "Назад" */
+.backButton {
+  background: none;
+  border: none;
+  color: #4a90e2;
+  cursor: pointer;
+  margin-right: 12px;
+  padding: 6px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.backButton:hover {
+  background: rgba(74, 144, 226, 0.1);
+}
+
+/* Информация о пользователе */
+.userInfo {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 12px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #4a90e2;
+}
+
+.userName {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+/* Контейнер сообщений */
+.messagesContainer {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Состояние "нет сообщений" */
+.noMessages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #5a5a5a;
+  text-align: center;
+}
+
+.noMessagesIcon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+/* Обертка сообщения */
+.messageWrapper {
+  display: flex;
+  max-width: 75%;
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Стили для своих сообщений (справа) */
+.myMessage {
+  margin-left: auto; /* Это ключевое свойство для выравнивания вправо */
+  justify-content: flex-end;
+}
+
+/* Чужие сообщения (слева) */
+.otherMessage {
+  margin-right: auto; /* Это ключевое свойство для выравнивания влево */
+  justify-content: flex-start;
+}
+
+/* Информация об отправителе */
+.senderInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.senderAvatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.senderName {
+  font-size: 12px;
+  font-weight: 500;
+  color: #8a8a8a;
+}
+
+/* Пузырь сообщения */
+.messageBubble {
+  padding: 12px 16px;
+  border-radius: 18px;
+  line-height: 1.4;
+  word-wrap: break-word;  /* Перенос длинных слов */
+  overflow-wrap: break-word;  /* Альтернатива для word-wrap */
+  white-space: pre-wrap;  /* Сохраняет переносы строк, но переносит длинный текст */
+  word-break: break-word;  /* Разрешает разрыв слов при необходимости */
+}
+/* Стиль для своих сообщений */
+.myMessage .messageBubble {
+  background: #4a6fa5;
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+/* Стиль чужих сообщений */
+.otherMessage .messageBubble {
+  background: #2a2a2a;
+  color: #e0e0e0;
+  border-bottom-left-radius: 4px;
+}
+
+/* Текст сообщения */
+.messageContent {
+  font-size: 15px;
+}
+
+/* Мета-информация (время + статус) */
+.messageMeta {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 6px;
+  gap: 4px;
+}
+
+/* Время сообщения */
+.messageTime {
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+.myMessage .messageTime {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.otherMessage .messageTime {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Статус прочтения */
+.readStatus {
+  display: inline-flex;
+  margin-left: 4px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+}
+
+/* Поле ввода сообщения */
+.messageInputContainer {
+  display: flex;
+  padding: 16px;
+  background: #1a1a1a;
+  border-top: 1px solid #2a2a2a;
+  gap: 12px;
+  position: sticky;
+  bottom: 0;
+}
+
+.messageInput {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 24px;
+  border: none;
+  background: #2a2a2a;
+  color: white;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.messageInput:focus {
+  background: #333333;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.3);
+}
+
+/* Кнопка отправки */
+.sendButton {
+  background: #4a90e2;
+  border: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sendButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sendButton:not(:disabled):hover {
+  background: #5a9cf2;
+  transform: scale(1.05);
+}
+
+/* Анимации */
+@keyframes messageAppear {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Кастомный скроллбар */
+.messagesContainer::-webkit-scrollbar {
+  width: 6px;
+}
+
+.messagesContainer::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.messagesContainer::-webkit-scrollbar-thumb {
+  background: #3a3a3a;
+  border-radius: 3px;
+}
+
+.messagesContainer::-webkit-scrollbar-thumb:hover {
+  background: #4a4a4a;
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 768px) {
+  .messageWrapper {
+    max-width: 90%;
+  }
+  
+  .myMessage {
+    margin-left: 10%;
+  }
+  
+  .otherMessage {
+    margin-right: 10%;
+  }
+  
+  .messageInputContainer {
+    padding: 12px;
+  }
+}
+
+.statusText {
+  font-size: 0.75rem;
+  color: #a0a0a0;
+  margin-top: 2px;
+}
+
+.statusText.online {
+  color: #4CAF50;
+}
+

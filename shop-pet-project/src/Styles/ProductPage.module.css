@@ -1,0 +1,630 @@
+.productPage {
+  --primary-color: #3b82f6;
+  --primary-hover: #2563eb;
+  --secondary-color: #7c3aed;
+  --secondary-hover: #6d28d9;
+  --bg-dark: #111827;
+  --bg-darker: #0f172a;
+  --bg-card: #1f2937;
+  --text-primary: #f3f4f6;
+  --text-secondary: #9ca3af;
+  --text-tertiary: #6b7280;
+  --border-color: #374151;
+  --success-color: #10b981;
+  --error-color: #ef4444;
+  background-color: transparent;
+  color: var(--text-primary);
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
+.productContainer {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.loadingContainer,
+.errorContainer,
+.notFoundContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: var(--bg-dark);
+}
+
+.errorContainer {
+  color: var(--error-color);
+}
+
+.loadingSpinner {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  border-top-color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.breadcrumbs {
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+}
+
+.breadcrumbs ol {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.activeCrumb {
+  color: var(--primary-color);
+}
+
+.productGrid {
+  display: grid;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (min-width: 1024px) {
+  .productGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.productGallery {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.mainImageContainer {
+  background-color: var(--bg-card);
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
+
+.mainImage {
+  width: 100%;
+  height: 24rem;
+  object-fit: contain;
+  padding: 1rem;
+}
+
+.thumbnailContainer {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.thumbnail {
+  flex-shrink: 0;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  opacity: 0.7;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.thumbnail:hover {
+  opacity: 1;
+}
+
+.thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.activeThumbnail {
+  opacity: 1;
+  border: 2px solid var(--primary-color);
+  transform: scale(1.05);
+}
+
+.productInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.productHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.productTitle {
+  font-size: 1.875rem;
+  font-weight: 700;
+}
+
+.productPrice {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.productMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.reviewCount {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.inStock {
+  color: var(--success-color);
+  font-size: 0.875rem;
+  margin-left: 0.5rem;
+}
+
+.outOfStock {
+  color: var(--error-color);
+  font-size: 0.875rem;
+  margin-left: 0.5rem;
+}
+
+.categoryTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.categoryTag {
+  padding: 0.25rem 0.75rem;
+  background-color: var(--bg-card);
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.infoCard {
+  background-color: var(--bg-card);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
+
+.infoCard h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.infoCard p {
+  color: var(--text-secondary);
+  line-height: 1.625;
+}
+
+.specsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.specItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.specItem {
+  display: inline-block;
+  margin-right: 1rem;
+}
+
+.specName {
+  color: var(--text-secondary);
+  font-weight: 600; /* Жирный текст для названия */
+}
+
+.specValue {
+  color: var(--text-primary);
+  font-weight: 400; /* Обычный текст для значения */
+}
+
+:root {
+  --primary-color: #4ecca3;       
+  --primary-hover: #3db389;       
+  --primary-active: #2e9c7a;      
+  --primary-text: #1a1a2e;        
+  
+  --secondary-color: #393e46;    
+  --secondary-hover: #2d3238;    
+  --secondary-active: #212529;   
+  --secondary-text: #eeeeee;     
+}
+
+.actionButtons {
+  display: flex;
+  gap: 1rem;
+  padding-top: 0.5rem;
+}
+
+.actionButton {
+  flex: 1;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;              
+  transition: all 0.25s ease;   
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+}
+
+.actionButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;   
+}
+
+.actionButton:not(:disabled):active {
+  transform: translateY(1px);   
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.primaryButton {
+  background-color: var(--primary-color);
+  color: lightcyan;    
+}
+
+.primaryButton:not(:disabled):hover {
+  background-color: var(--primary-hover);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.primaryButton:not(:disabled):active {
+  background-color: var(--primary-active);
+}
+
+.secondaryButton {
+  background-color: var(--secondary-color);
+  color: var(--secondary-text);
+  border: 1px solid #4e4e4e;     
+}
+
+.secondaryButton:not(:disabled):hover {
+  background-color: var(--secondary-hover);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.secondaryButton:not(:disabled):active {
+  background-color: var(--secondary-active);
+}
+
+.actionButton svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  transition: transform 0.2s ease; 
+}
+
+.actionButton:not(:disabled):hover svg {
+  transform: scale(1.1);         
+}
+
+.sellerInfo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.sellerAvatar {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 9999px;
+  object-fit: cover;
+  border: 2px solid var(--primary-color);
+}
+
+.sellerName {
+  font-weight: 500;
+}
+
+.sellerRating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.sellerJoinDate {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.reviewsSection {
+  background-color: var(--bg-card);
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  margin-bottom: 3rem;
+  margin-top: 40px;
+}
+
+.reviewsTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.reviewsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.reviewItem {
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.reviewItem:first-child {
+  padding-top: 0;
+  border-top: none;
+}
+
+.reviewContent {
+  display: flex;
+  gap: 1rem;
+}
+
+.reviewAvatar {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 9999px;
+  object-fit: cover;
+}
+
+.reviewDetails {
+  flex: 1;
+}
+
+.reviewHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.reviewAuthor {
+  font-weight: 500;
+}
+
+.reviewMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.reviewDate {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.reviewActions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.reviewAction {
+  color: var(--text-secondary);
+  transition: color 0.2s ease;
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.reviewAction:hover {
+  color: var(--primary-color);
+}
+
+.reviewDislike:hover {
+  color: var(--error-color);
+}
+
+.actionCount {
+  font-size: 0.75rem;
+  margin-right: 0.25rem;
+}
+
+.reviewText {
+  margin-top: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.625;
+}
+
+.reviewAction svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.noReviews {
+  text-align: center;
+  padding: 2rem 0;
+  color: var(--text-secondary);
+}
+
+.noReviews svg {
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto 1rem;
+  color: var(--text-tertiary);
+}
+
+.noReviews p {
+  margin-top: 0.5rem;
+}
+
+.reviewForm {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.reviewForm h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form label {
+  display: block;
+  margin-bottom: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.reviewTextarea {
+  width: 100%;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  font-size: 1rem;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+  resize: vertical;
+  min-height: 8rem;
+}
+
+.reviewTextarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+}
+
+.reviewSubmit {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+  border: none;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.reviewSubmit:hover:not(:disabled) {
+  background-color: var(--primary-hover);
+}
+
+.reviewSubmit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.updateButton {
+  background-color: #f0ad4e;
+  color: white;
+}
+
+.updateButton:hover {
+  background-color: #ec971f;
+}
+
+.updateButton svg {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+}
+
+.reviewForm {
+  background: #1a1a2e;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #2c2c3a;
+  margin-top: 2rem;
+}
+
+.reviewForm h3 {
+  color: #4ecca3;
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.form-control {
+  background-color: #1a1a2e;
+  color: #ffffff;
+  border: 1px solid #2c2c3a;
+}
+
+.form-control.is-invalid {
+  border-color: #dc3545;
+}
+
+.invalid-feedback {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.text-light {
+  color: #ffffff !important;
+}
+
+.formGroup {
+  margin-bottom: 1rem;
+}
+
+.errorText {
+  color: #ff6b6b;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.errorBorder {
+  border-color: #ff6b6b;
+}
+
+.activeVote {
+  font-weight: bold;
+}
+
+.reviewAction {
+  color: inherit; /* или конкретный цвет, например #333 */
+  transition: all 0.2s ease;
+}
+
+.reviewAction:hover {
+  opacity: 0.8;
+}

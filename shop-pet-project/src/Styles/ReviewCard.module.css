@@ -1,0 +1,183 @@
+.card {
+  background: #1e1e2d;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  border: 1px solid #2d2d3d;
+  transition: all 0.3s ease;
+  margin-bottom: 16px;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  height: 250px; /* Фиксированная высота */
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+  border-color: #3a3a4a;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #2a2a3a;
+  border-bottom: 1px solid #3a3a4a;
+  flex-shrink: 0; /* Запрещаем сжатие */
+}
+
+.userSection {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #4a4a6a;
+  transition: border-color 0.3s ease;
+}
+
+.avatar:hover {
+  border-color: #6575ff;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.userName {
+  font-size: 15px;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.reviewDate {
+  font-size: 13px;
+  color: #a0a0c0;
+  font-weight: 400;
+}
+
+.rating {
+  display: flex;
+  gap: 4px;
+}
+
+.star {
+  font-size: 18px;
+  color: #4a4a6a;
+}
+
+.starFilled {
+  color: #ffb800;
+  text-shadow: 0 0 8px rgba(255, 184, 0, 0.3);
+}
+
+.contentSection {
+  padding: 16px 20px;
+  border-bottom: 1px solid #3a3a4a;
+  flex-grow: 1; /* Занимает все доступное пространство */
+  overflow-y: auto; /* Добавляем скролл если контент не помещается */
+}
+
+.reviewText {
+  font-size: 14px;
+  color: #e0e0e0;
+  line-height: 1.6;
+  margin: 0;
+  word-break: break-word; /* Перенос длинных слов */
+}
+
+.statusSection {
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0; /* Запрещаем сжатие */
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.statusPending {
+  background: rgba(101, 117, 255, 0.15);
+  color: #6575ff;
+}
+
+.statusApproved {
+  background: rgba(46, 204, 113, 0.15);
+  color: #2ecc71;
+}
+
+.statusRejected {
+  background: rgba(235, 87, 87, 0.15);
+  color: #eb5757;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+}
+
+.actionButton {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  outline: none;
+}
+
+.approveButton {
+  background: rgba(46, 204, 113, 0.2);
+  color: #2ecc71;
+}
+
+.approveButton:hover {
+  background: rgba(46, 204, 113, 0.3);
+}
+
+.rejectButton {
+  background: rgba(235, 87, 87, 0.2);
+  color: #eb5757;
+}
+
+.rejectButton:hover {
+  background: rgba(235, 87, 87, 0.3);
+}
+
+@media (max-width: 480px) {
+  .card {
+    height: auto; /* На мобильных делаем авто-высоту */
+    min-height: 300px;
+  }
+  
+  .header {
+    padding: 14px 16px;
+  }
+  
+  .actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .actionButton {
+    width: 100%;
+  }
+}
+

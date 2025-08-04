@@ -1,0 +1,293 @@
+.container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.title {
+    color: #fff;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.loadingContainer,
+.errorContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 50vh;
+}
+
+.spinner {
+    animation: spin 1s linear infinite;
+    color: #4ecca3;
+}
+
+.errorText {
+    color: #ff6b6b;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.retryButton {
+    background: #4ecca3;
+    color: #1a1a2e;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.retryButton:hover {
+    background: #3db389;
+}
+
+.emptyState {
+    text-align: center;
+    padding: 3rem;
+    background: rgba(74, 85, 104, 0.2);
+    border-radius: 12px;
+    color: #a0aec0;
+}
+
+.emptyIcon {
+    margin-bottom: 1rem;
+    color: #4ecca3;
+}
+
+.emptyState h2 {
+    color: #fff;
+    margin-bottom: 0.5rem;
+}
+
+.ordersList {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.orderCard {
+    background: #2d3748;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.orderCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.orderHeader {
+    display: flex;
+    align-items: center;
+    padding: 1.25rem;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.orderInfo {
+    flex: 1;
+    min-width: 200px;
+}
+
+.orderId {
+    display: block;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 0.25rem;
+}
+
+.orderDate {
+    color: #a0aec0;
+    font-size: 0.9rem;
+}
+
+.orderStatus {
+    min-width: 150px;
+}
+
+.statusBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #fff;
+}
+
+.statusIcon {
+    width: 1rem;
+    height: 1rem;
+}
+
+.spinning {
+    animation: spin 1s linear infinite;
+}
+
+.orderTotal {
+    font-weight: 600;
+    color: #fff;
+    font-size: 1.1rem;
+    min-width: 120px;
+    text-align: right;
+}
+
+.expandButton {
+    background: none;
+    border: none;
+    color: #a0aec0;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.orderCard[aria-expanded="true"] .expandButton {
+    transform: rotate(180deg);
+}
+
+.orderDetails {
+    padding: 1.25rem;
+    border-top: 1px solid #4a5568;
+    background: rgba(74, 85, 104, 0.1);
+}
+
+.deliveryInfo,
+.statusTimeline,
+.itemsSection {
+    margin-bottom: 1.5rem;
+}
+
+.deliveryInfo h3,
+.statusTimeline h3,
+.itemsSection h3 {
+    color: #fff;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.deliveryInfo p {
+    color: #a0aec0;
+    line-height: 1.6;
+}
+
+.statusTimeline ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.statusItem {
+    display: flex;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    position: relative;
+}
+
+.statusItem:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 0.25rem;
+    top: 1.5rem;
+    bottom: -0.5rem;
+    width: 2px;
+    background: #4a5568;
+}
+
+.statusDot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    margin-top: 0.35rem;
+    flex-shrink: 0;
+}
+
+.statusContent {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.statusName {
+    color: #fff;
+    font-weight: 500;
+}
+
+.statusDate {
+    color: #a0aec0;
+    font-size: 0.85rem;
+}
+
+.itemsList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.orderItem {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    padding: 0.75rem;
+    background: rgba(74, 85, 104, 0.2);
+    border-radius: 8px;
+}
+
+.itemImage {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.itemDetails {
+    flex: 1;
+}
+
+.itemDetails h4 {
+    color: #fff;
+    margin: 0 0 0.25rem 0;
+    font-size: 1rem;
+}
+
+.itemPrice {
+    color: #a0aec0;
+    font-size: 0.9rem;
+}
+
+.itemTotal {
+    font-weight: 600;
+    color: #fff;
+    min-width: 100px;
+    text-align: right;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+:root {
+    --status-created: #4299e1;        
+    --status-processing: #9f7aea;     
+    --status-confirmed: #38b2ac;      
+    --status-shipped: #ed8936;        
+    --status-delivered: #48bb78;      
+    --status-payed: #10b981;          
+    --status-received: #059669;       
+    
+    --status-canceled: #f56565;       
+    --status-failed: #dc2626;         
+}
