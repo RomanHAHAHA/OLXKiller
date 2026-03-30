@@ -27,7 +27,7 @@ public class RegisterUserCommandHandler(
         try
         {
             await usersRepository.CreateAsync(user, cancellationToken);
-            await OnUserRegistered(user, request.RegisterDto.ConnectionId, cancellationToken);
+            await OnUserRegistered(user, request.RegisterDto.ConnectionId, cancellationToken); 
             
             var created = await usersRepository.SaveChangesAsync(cancellationToken);
 

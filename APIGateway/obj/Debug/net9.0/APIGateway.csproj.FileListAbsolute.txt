@@ -35,3 +35,14 @@ D:\Rider\Projects\OLXKiller\APIGateway\obj\Debug\net9.0\rjimswa.dswa.cache.json
 D:\Rider\Projects\OLXKiller\APIGateway\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
 D:\Rider\Projects\OLXKiller\APIGateway\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
 D:\Rider\Projects\OLXKiller\APIGateway\obj\Debug\net9.0\staticwebassets.build.json.cache
+D:\Rider\Projects\OLXKiller\APIGateway\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.dll
+D:\Rider\Projects\OLXKiller\APIGateway\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+D:\Rider\Projects\OLXKiller\APIGateway\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.InMemory.dll
+D:\Rider\Projects\OLXKiller\APIGateway\bin\Debug\net9.0\Microsoft.Extensions.Caching.Abstractions.dll
+D:\Rider\Projects\OLXKiller\APIGateway\bin\Debug\net9.0\Microsoft.Extensions.Caching.Memory.dll
+D:\Rider\Projects\OLXKiller\APIGateway\bin\Debug\net9.0\Microsoft.Extensions.DependencyInjection.dll
+D:\Rider\Projects\OLXKiller\APIGateway\bin\Debug\net9.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+D:\Rider\Projects\OLXKiller\APIGateway\bin\Debug\net9.0\Microsoft.Extensions.Logging.dll
+D:\Rider\Projects\OLXKiller\APIGateway\bin\Debug\net9.0\Microsoft.Extensions.Logging.Abstractions.dll
+D:\Rider\Projects\OLXKiller\APIGateway\bin\Debug\net9.0\Microsoft.Extensions.Options.dll
+D:\Rider\Projects\OLXKiller\APIGateway\bin\Debug\net9.0\Microsoft.Extensions.Primitives.dll

@@ -24,7 +24,7 @@ public class SetAvatarImageCommandHandler(
 
         if (user is null)
         {
-            return ApiResponse.NotFound("Unable to complete the request.");
+            return ApiResponse.NotFound(nameof(User));
         }
 
         var result = await fileStorageService.SaveFileAsync(
@@ -37,18 +37,24 @@ public class SetAvatarImageCommandHandler(
             return ApiResponse.InternalServerError(result.Error);
         }
         
-        await cacheService.SetAsync(
-            $"user-avatar:{user.Id}",
-            user.AvatarPath ?? string.Empty,
-            TimeSpan.FromMinutes(5),
-            cancellationToken);
-        
+        var oldAvatarPath = user.AvatarPath;
         user.AvatarPath = result.Value;
         await OnAvatarSet(user, cancellationToken);
 
         var updated = await usersRepository.SaveChangesAsync(cancellationToken);
 
-        return updated ? ApiResponse.Ok() : ApiResponse.InternalServerError();
+        if (!updated)
+        {
+            return ApiResponse.InternalServerError();
+        }
+        
+        await cacheService.SetAsync(
+            $"user-avatar:{user.Id}",
+            oldAvatarPath ?? string.Empty,
+            TimeSpan.FromMinutes(5),
+            cancellationToken);
+
+        return ApiResponse.Ok();
     }
     
     private async Task OnAvatarSet(User user, CancellationToken cancellationToken)

@@ -32,4 +32,15 @@ public class CartsRepository(CartsDbContext dbContext) : ICartsRepository
             .Where(ci => ci.UserId == userId)
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<bool> IsProductAlreadyInCartAsync(
+        Guid productId, 
+        Guid userId, 
+        CancellationToken cancellationToken = default)
+    {
+        return await dbContext.CartItems
+            .AnyAsync(
+                ci => ci.ProductId == productId && ci.UserId == userId,
+                cancellationToken);
+    }
 }

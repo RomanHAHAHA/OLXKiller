@@ -14,6 +14,6 @@ public class GetUserByIdQueryHandler(IUsersRepository usersRepository) :
     {
         var user = await usersRepository.GetByIdAsync(request.UserId, cancellationToken);
             
-        return user ?? ApiResponse<User>.NotFound("User not found");
+        return user ?? ApiResponse<User>.NotFound(nameof(User));
     }
 }

@@ -28,6 +28,6 @@ public class GetUserCartQueryHandler(
                     },
                     Quantity = ci.Quantity
                 }).ToList(),
-        };;
+        };
     }
 }

@@ -18,8 +18,8 @@ public class DeleteActionLogCommandHandler(
         }
         
         logsRepository.Delete(actionLog);
-        await logsRepository.SaveChangesAsync(cancellationToken);
+        var deleted = await logsRepository.SaveChangesAsync(cancellationToken);
         
-        return ApiResponse.Ok();
+        return deleted ? ApiResponse.Ok() : ApiResponse.InternalServerError();
     }
 }

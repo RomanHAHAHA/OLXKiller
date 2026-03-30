@@ -61,5 +61,7 @@ public class CreateUserCommandHandler(
                 ConnectionId = request.ConnectionId,
             },
             cancellationToken);
+        
+        await usersRepository.SaveChangesAsync(cancellationToken);
     }
 }

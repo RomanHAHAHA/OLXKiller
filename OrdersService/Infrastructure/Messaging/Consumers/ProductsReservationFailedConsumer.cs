@@ -1,7 +1,7 @@
 ﻿using Common.Infrastructure.Messaging.Events.Product;
 using MassTransit;
 using MediatR;
-using OrdersService.Application.Features.Orders.Delete;
+using OrdersService.Application.Features.Orders.Commands.Delete;
 
 namespace OrdersService.Infrastructure.Messaging.Consumers;
 

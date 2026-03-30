@@ -3,6 +3,7 @@ import { API_BASE_URL } from "../../apiConfig";
 import { useState, useEffect } from "react";
 import { FaPlusCircle, FaMinusCircle, FaSpinner, FaArrowLeft } from "react-icons/fa";
 import { useParams, useNavigate } from "react-router-dom";
+import { CloudRainWind } from "lucide-react";
 
 const AddCharacteristicsPage = () => {
     const { productId } = useParams();
@@ -19,10 +20,21 @@ const AddCharacteristicsPage = () => {
             try {
                 const response = await fetch(`${API_BASE_URL}products-api/api/products/${productId}/characteristics`);
                 if (response.ok) {
-                    const data = await response.json();
-                    if (data.length > 0) {
+                    const responseData = await response.json();                    
+                    // Достаем массив из поля data
+                    const characteristicsArray = responseData.data || [];
+                    
+                    if (characteristicsArray.length > 0) {
                         setFormData({
-                            characteristics: data.map(c => ({ name: c.name, value: c.value }))
+                            characteristics: characteristicsArray.map(c => ({ 
+                                name: c.name || "", 
+                                value: c.value || "" 
+                            }))
+                        });
+                    } else {
+                        // Если характеристик нет, оставляем одно пустое поле
+                        setFormData({
+                            characteristics: [{ name: "", value: "" }]
                         });
                     }
                 }
@@ -99,8 +111,10 @@ const AddCharacteristicsPage = () => {
                 body: JSON.stringify(characteristicsDto)
             });
 
+            const responseData = await response.json();
+
             if (!response.ok) {
-                throw new Error('Failed to save characteristics');
+                throw new Error(responseData.message || 'Failed to save characteristics');
             }
 
             navigate(`/products/${productId}`);
@@ -139,7 +153,7 @@ const AddCharacteristicsPage = () => {
         return (
             <div className="container py-5 text-center">
                 <FaSpinner className="spin" size={24} />
-                <p>Loading...</p>
+                <p>Loading characteristics...</p>
             </div>
         );
     }
@@ -153,60 +167,68 @@ const AddCharacteristicsPage = () => {
                 </div>
 
                 <div className="characteristics-container mb-4">
-                    {formData.characteristics.map((char, index) => (
-                        <div key={index} className="characteristic-item mb-3 p-3 bg-secondary bg-opacity-10 rounded">
-                            <div className="row g-2 align-items-center">
-                                <div className="col-md-5">
-                                    <div className="form-floating">
-                                        <input
-                                            type="text"
-                                            className={`form-control bg-transparent text-light ${validationErrors[`name_${index}`] ? 'is-invalid' : ''}`}
-                                            value={char.name}
-                                            onChange={(e) => handleChange(index, 'name', e.target.value)}
-                                            placeholder=" "
-                                        />
-                                        <label className="text-light">Characteristic Name</label>
-                                        {validationErrors[`name_${index}`] && (
-                                            <div className="invalid-feedback d-block">
-                                                {validationErrors[`name_${index}`]}
-                                            </div>
-                                        )}
+                    {formData.characteristics.length === 0 ? (
+                        <div className="text-center text-light py-4">
+                            <p>No characteristics added yet</p>
+                        </div>
+                    ) : (
+                        formData.characteristics.map((char, index) => (
+                            <div key={index} className="characteristic-item mb-3 p-3 bg-secondary bg-opacity-10 rounded">
+                                <div className="row g-2 align-items-center">
+                                    <div className="col-md-5">
+                                        <div className="form-floating">
+                                            <input
+                                                type="text"
+                                                className={`form-control bg-transparent text-light ${validationErrors[`name_${index}`] ? 'is-invalid' : ''}`}
+                                                value={char.name}
+                                                onChange={(e) => handleChange(index, 'name', e.target.value)}
+                                                placeholder=" "
+                                                style={{ color: '#fff' }}
+                                            />
+                                            <label className="text-light">Characteristic Name</label>
+                                            {validationErrors[`name_${index}`] && (
+                                                <div className="invalid-feedback d-block">
+                                                    {validationErrors[`name_${index}`]}
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div className="col-md-5">
-                                    <div className="form-floating">
-                                        <input
-                                            type="text"
-                                            className={`form-control bg-transparent text-light ${validationErrors[`value_${index}`] ? 'is-invalid' : ''}`}
-                                            value={char.value}
-                                            onChange={(e) => handleChange(index, 'value', e.target.value)}
-                                            placeholder=" "
-                                        />
-                                        <label className="text-light">Value</label>
-                                        {validationErrors[`value_${index}`] && (
-                                            <div className="invalid-feedback d-block">
-                                                {validationErrors[`value_${index}`]}
-                                            </div>
-                                        )}
+                                    <div className="col-md-5">
+                                        <div className="form-floating">
+                                            <input
+                                                type="text"
+                                                className={`form-control bg-transparent text-light ${validationErrors[`value_${index}`] ? 'is-invalid' : ''}`}
+                                                value={char.value}
+                                                onChange={(e) => handleChange(index, 'value', e.target.value)}
+                                                placeholder=" "
+                                                style={{ color: '#fff' }}
+                                            />
+                                            <label className="text-light">Value</label>
+                                            {validationErrors[`value_${index}`] && (
+                                                <div className="invalid-feedback d-block">
+                                                    {validationErrors[`value_${index}`]}
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div className="col-md-2 d-flex justify-content-center">
-                                    <button
-                                        type="button"
-                                        className="btn btn-outline-danger p-2 d-flex align-items-center justify-content-center"
-                                        style={{ width: '38px', height: '38px' }}
-                                        onClick={() => removeCharacteristic(index)}
-                                        disabled={formData.characteristics.length <= 1}
-                                        title="Remove characteristic"
-                                    >
-                                        <FaMinusCircle className="m-0" />
-                                    </button>
+                                    <div className="col-md-2 d-flex justify-content-center">
+                                        <button
+                                            type="button"
+                                            className="btn btn-outline-danger p-2 d-flex align-items-center justify-content-center"
+                                            style={{ width: '38px', height: '38px' }}
+                                            onClick={() => removeCharacteristic(index)}
+                                            disabled={formData.characteristics.length <= 1}
+                                            title="Remove characteristic"
+                                        >
+                                            <FaMinusCircle className="m-0" />
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        ))
+                    )}
                 </div>
 
                 <div className="mb-4 text-center">
@@ -231,6 +253,13 @@ const AddCharacteristicsPage = () => {
                 <button
                     type="button"
                     className="btn-accent-outline px-4 py-2"
+                    onClick={handleSkip}
+                >
+                    Skip
+                </button>
+                <button
+                    type="button"
+                    className="btn-accent px-4 py-2"
                     onClick={handleSubmit}
                     disabled={isSubmitting}
                 >
@@ -240,7 +269,7 @@ const AddCharacteristicsPage = () => {
                             Saving...
                         </>
                     ) : (
-                        "Complete"
+                        "Save & Continue"
                     )}
                 </button>
             </div>

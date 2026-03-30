@@ -184,3 +184,4 @@ D:\Rider\Projects\OLXKiller\OrdersService\obj\Debug\net9.0\rjimswa.dswa.cache.js
 D:\Rider\Projects\OLXKiller\OrdersService\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
 D:\Rider\Projects\OLXKiller\OrdersService\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
 D:\Rider\Projects\OLXKiller\OrdersService\obj\Debug\net9.0\staticwebassets.build.json.cache
+D:\Rider\Projects\OLXKiller\OrdersService\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.InMemory.dll

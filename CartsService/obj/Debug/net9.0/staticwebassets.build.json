@@ -1,12 +1,1 @@
-{
-  "Version": 1,
-  "Hash": "YXmxGz0ElcYzJ+Feyl1TV2Vrj3aFgvHBxBQwIWqbrN4=",
-  "Source": "CartsService",
-  "BasePath": "_content/CartsService",
-  "Mode": "Default",
-  "ManifestType": "Build",
-  "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": [],
-  "Endpoints": []
-}
+{"Version":1,"Hash":"YXmxGz0ElcYzJ+Feyl1TV2Vrj3aFgvHBxBQwIWqbrN4=","Source":"CartsService","BasePath":"_content/CartsService","Mode":"Default","ManifestType":"Build","ReferencedProjectsConfiguration":[],"DiscoveryPatterns":[],"Assets":[],"Endpoints":[]}

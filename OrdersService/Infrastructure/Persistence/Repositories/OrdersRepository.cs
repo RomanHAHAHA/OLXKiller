@@ -5,7 +5,8 @@ using Common.Domain.Extensions;
 using Common.Domain.Models.Results;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using OrdersService.Application.Features.Orders.GetPagedOrders;
+using OrdersService.Application.Features.Orders.Queries.GetOrderDetails;
+using OrdersService.Application.Features.Orders.Queries.GetPagedOrders;
 using OrdersService.Domain.Dtos;
 using OrdersService.Domain.Entities;
 using OrdersService.Domain.Interfaces;
@@ -15,8 +16,8 @@ namespace OrdersService.Infrastructure.Persistence.Repositories;
 public class OrdersRepository(OrdersDbContext dbContext) :
     Repository<OrdersDbContext, Order, Guid>(dbContext), 
     IOrdersRepository
-{
-    public async Task<PagedList<OrderDto>> GetPagedOrdersAsync(
+{   
+    public async Task<PagedList<ShortOrdersDto>> GetPagedOrdersAsync(
         OrderFilter orderFilter,
         SortParams sortParams,
         PageParams pageParams,
@@ -26,7 +27,6 @@ public class OrdersRepository(OrdersDbContext dbContext) :
             .AsNoTracking()
             .AsSplitQuery()
             .Include(o => o.User)
-            .Include(o => o.DeliveryLocation)
             .Include(o => o.Statuses)
             .Include(o => o.OrderItems)
             .ThenInclude(oi => oi.Product)
@@ -34,11 +34,27 @@ public class OrdersRepository(OrdersDbContext dbContext) :
             .Sort(sortParams)
             .ToPagedAsync(pageParams, cancellationToken);
         
-        return new PagedList<OrderDto>(
-            pagedOrders.Items.Select(OrderDto.FromEntity).ToList(), 
+        return new PagedList<ShortOrdersDto>(
+            pagedOrders.Items.Select(ShortOrdersDto.FromEntity).ToList(),
             pagedOrders.Page,
             pagedOrders.PageSize,
             pagedOrders.TotalCount);
+    }
+
+    public async Task<OrderDetailsDto?> GetOrderDetailsAsync(
+        Guid orderId,
+        CancellationToken cancellationToken)
+    {
+        return await AppDbContext.Orders
+            .AsNoTracking()
+            .AsSplitQuery()
+            .Include(o => o.Statuses)
+            .Include(o => o.DeliveryLocation)
+            .Include(o => o.OrderItems)
+            .ThenInclude(oi => oi.Product)
+            .Where(o => o.Id == orderId)
+            .Select(OrderDetailsDto.Projection)
+            .FirstOrDefaultAsync(cancellationToken);
     }
     
     public async Task<List<PersonalOrderDto>> GetPersonalOrdersAsync(

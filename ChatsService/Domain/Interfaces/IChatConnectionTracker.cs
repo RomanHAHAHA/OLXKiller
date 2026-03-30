@@ -1,8 +1,4 @@
-﻿
-using ChatsService.Application.Services;
-using ChatsService.Domain.Models;
-
-namespace ChatsService.Domain.Interfaces;
+﻿namespace ChatsService.Domain.Interfaces;
 
 public interface IChatConnectionTracker
 {
@@ -11,6 +7,4 @@ public interface IChatConnectionTracker
     Task FullRemoveConnectionAsync(string connectionId);
 
     Task<bool> IsUserInChatAsync(Guid userId, Guid chatId);
-
-    Task<UserConnection?> GetUserData(Guid userId);
 }

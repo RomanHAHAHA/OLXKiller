@@ -16,4 +16,9 @@ public interface ICartsRepository
     Task<List<CartItem>> GetUserCartByIdAsync(
         Guid userId, 
         CancellationToken cancellationToken = default);
+    
+    Task<bool> IsProductAlreadyInCartAsync(
+        Guid productId,
+        Guid userId,
+        CancellationToken cancellationToken = default);
 }

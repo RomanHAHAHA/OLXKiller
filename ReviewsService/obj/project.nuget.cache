@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "ZMRPCQM/cYc=",
+  "dgSpecHash": "bh9V3fy0FIo=",
   "success": true,
   "projectFilePath": "D:\\Rider\\Projects\\OLXKiller\\ReviewsService\\ReviewsService.csproj",
   "expectedPackageFiles": [
@@ -47,6 +47,7 @@
     "C:\\Users\\simon\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\9.0.5\\microsoft.entityframeworkcore.abstractions.9.0.5.nupkg.sha512",
     "C:\\Users\\simon\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\9.0.5\\microsoft.entityframeworkcore.analyzers.9.0.5.nupkg.sha512",
     "C:\\Users\\simon\\.nuget\\packages\\microsoft.entityframeworkcore.design\\9.0.5\\microsoft.entityframeworkcore.design.9.0.5.nupkg.sha512",
+    "C:\\Users\\simon\\.nuget\\packages\\microsoft.entityframeworkcore.inmemory\\9.0.5\\microsoft.entityframeworkcore.inmemory.9.0.5.nupkg.sha512",
     "C:\\Users\\simon\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\9.0.5\\microsoft.entityframeworkcore.relational.9.0.5.nupkg.sha512",
     "C:\\Users\\simon\\.nuget\\packages\\microsoft.entityframeworkcore.sqlserver\\9.0.5\\microsoft.entityframeworkcore.sqlserver.9.0.5.nupkg.sha512",
     "C:\\Users\\simon\\.nuget\\packages\\microsoft.entityframeworkcore.tools\\9.0.5\\microsoft.entityframeworkcore.tools.9.0.5.nupkg.sha512",

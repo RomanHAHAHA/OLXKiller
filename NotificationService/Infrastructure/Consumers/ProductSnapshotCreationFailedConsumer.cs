@@ -10,7 +10,6 @@ public class ProductSnapshotCreationFailedConsumer(
 {
     public async Task Consume(ConsumeContext<ProductSnapshotCreationFailedEvent> context)
     {
-        Console.WriteLine("Snapshot creation failed");
         var @event = context.Message;
         var command = new NotifyProductSnapshotCreationFailedCommand(
             @event.CorrelationId,

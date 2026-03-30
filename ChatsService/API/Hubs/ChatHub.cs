@@ -48,10 +48,12 @@ public class ChatHub(
     private Guid GetCurrentUserId()
     {
         var claim = Context.User?.FindFirst(ClaimTypes.NameIdentifier);
+        
         if (claim == null || !Guid.TryParse(claim.Value, out var userId))
         {
             throw new HubException("User not authenticated");
         }
+        
         return userId;
     }
 }

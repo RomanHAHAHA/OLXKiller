@@ -1,7 +1,7 @@
 ﻿using Common.Infrastructure.Messaging.Events.Product;
 using MassTransit;
 using MediatR;
-using OrdersService.Application.Features.Orders.Confirm;
+using OrdersService.Application.Features.Orders.Commands.Confirm;
 
 namespace OrdersService.Infrastructure.Messaging.Consumers;
 
@@ -13,8 +13,7 @@ public class ProductsReservedConsumer(IServiceProvider serviceProvider) : IConsu
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
         
         var command = new ConfirmOrderProcessingCommand(
-            context.Message.OrderId, 
-            context.Message.UserId);
+            context.Message.OrderId);
         
         await mediator.Send(command, context.CancellationToken);
     }

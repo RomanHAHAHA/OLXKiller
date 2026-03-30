@@ -11,6 +11,7 @@ public class NotifyOrderStatusChangedCommandHandler(
         await emailSender.SendMessageAsync(
             request.UserEmail, 
             request.Subject,
-            request.Content);
+            request.Content,
+            cancellationToken);
     }
 }

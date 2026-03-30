@@ -1,7 +1,7 @@
 ﻿using Common.Infrastructure.Messaging.Events.User;
 using MassTransit;
 using MediatR;
-using UsersService.Application.Features.Users.SetLoginTime;
+using UsersService.Application.Features.Accounts.SetLoginTime;
 
 namespace UsersService.Infrastructure.Messaging.Consumers;
 

@@ -12,6 +12,7 @@ public class CreateLogActionCommandHandler(
         await logsRepository.CreateAsync(
             new ActionLog
             {
+                Id = Guid.NewGuid(),
                 UserId = request.UserId,    
                 ActionType = request.ActionType,
                 Description = request.Message,

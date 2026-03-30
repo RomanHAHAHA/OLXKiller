@@ -11,7 +11,7 @@ public class ChatConnectionTracker(
     ChatsDbContext dbContext,
     ILogger<ChatConnectionTracker> logger) : IChatConnectionTracker
 {
-    private readonly IDatabase _db = connection.GetDatabase();
+    private readonly IDatabase _redisDb = connection.GetDatabase();
 
     public async Task SetConnectionAsync(Guid userId, string connectionId, Guid chatId)
     {
@@ -27,7 +27,7 @@ public class ChatConnectionTracker(
                 AvatarPath = user?.AvatarImageName ?? string.Empty,
             };
 
-            await _db.StringSetAsync($"user:{userId}", JsonSerializer.Serialize(data));
+            await _redisDb.StringSetAsync($"user:{userId}", JsonSerializer.Serialize(data));
             logger.LogInformation($"{data.NickName} CurrentChatId: {data.CurrentChatId}");
         }
         catch (Exception ex)
@@ -50,7 +50,7 @@ public class ChatConnectionTracker(
                 {
                     try
                     {
-                        var json = await _db.StringGetAsync(key);
+                        var json = await _redisDb.StringGetAsync(key);
 
                         if (json.IsNullOrEmpty)
                         {
@@ -61,7 +61,7 @@ public class ChatConnectionTracker(
                         
                         if (signalRConnection?.ConnectionId == connectionId)
                         {
-                            var transaction = _db.CreateTransaction();
+                            var transaction = _redisDb.CreateTransaction();
                             transaction.AddCondition(Condition.StringEqual(key, json));
                             _ = transaction.KeyDeleteAsync(key);
                             
@@ -112,14 +112,20 @@ public class ChatConnectionTracker(
             return false;
         }
     }
-
-    public async Task<UserConnection?> GetUserData(Guid userId)
+    
+    private async Task<UserConnection?> GetUserData(Guid userId)
     {
         try
         {
-            var json = await _db.StringGetAsync($"user:{userId}");
+            var json = await _redisDb.StringGetAsync($"user:{userId}");
 
-            return json.IsNullOrEmpty ? JsonSerializer.Deserialize<UserConnection>(json!) : null;
+            if (json.IsNullOrEmpty)
+            {
+                logger.LogDebug($"No data found for user {userId}");
+                return null;
+            }
+        
+            return JsonSerializer.Deserialize<UserConnection>(json!);
         }
         catch (JsonException ex)
         {

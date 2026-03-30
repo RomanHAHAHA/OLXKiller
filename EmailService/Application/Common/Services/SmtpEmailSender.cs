@@ -10,7 +10,11 @@ public class SmtpEmailSender(IOptions<SmtpOptions> options) : IEmailSender
 {
     private readonly SmtpOptions _options = options.Value;
     
-    public async Task SendMessageAsync(string email, string subject, string message)
+    public async Task SendMessageAsync(
+        string email, 
+        string subject, 
+        string message, 
+        CancellationToken cancellationToken)
     {
         using var smtpClient = new SmtpClient(_options.Server, _options.Port);
         using var mailMessage = new MailMessage();
@@ -26,6 +30,6 @@ public class SmtpEmailSender(IOptions<SmtpOptions> options) : IEmailSender
         mailMessage.Body = message;
         mailMessage.IsBodyHtml = true; 
 
-        await smtpClient.SendMailAsync(mailMessage);
+        await smtpClient.SendMailAsync(mailMessage, cancellationToken);
     }
 }

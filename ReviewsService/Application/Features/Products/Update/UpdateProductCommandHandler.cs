@@ -54,7 +54,7 @@ public class UpdateProductCommandHandler(
     private async Task OnProductUpdateFailed(UpdateProductCommand request, CancellationToken cancellationToken)
     {
         await publisher.Publish(
-            new ProductSnapshotUpdateFailedEvent()
+            new ProductSnapshotUpdateFailedEvent
             {
                 CorrelationId = request.CorrelationId,
                 SenderServiceName = serviceOptions.Value.Name,

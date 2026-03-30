@@ -1,5 +1,4 @@
 ﻿using Common.Application.Options;
-using Common.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Common.API.Authentication;

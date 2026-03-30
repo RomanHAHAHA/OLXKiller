@@ -8,7 +8,7 @@ const ProductForm = ({
     isSubmitting,
     formTitle,
     submitButtonText,
-    errors: propErrors = {} // Добавляем проп для ошибок
+    errors: propErrors = {} 
 }) => {
     const defaultFormState = {
         name: '',
@@ -20,7 +20,6 @@ const ProductForm = ({
     const [formData, setFormData] = useState(initialData || defaultFormState);
     const [validationErrors, setValidationErrors] = useState({});
 
-    // Синхронизируем ошибки из пропсов
     useState(() => {
         if (propErrors) {
             setValidationErrors(propErrors);

@@ -47,8 +47,10 @@ public class CreateMessageCommandHandler(
             .Group(request.ChatId.ToString())
             .ReceiveMessage(MessageDto.Create(message));
         
-        if (!await connectionTracker.IsUserInChatAsync(recipient.Id, request.ChatId) && 
-            !await IsCurrentUserMuted(sender.Id, recipient.Id, cancellationToken))
+        var isRecipientInChat = await connectionTracker.IsUserInChatAsync(recipient.Id, request.ChatId);
+        var isSenderMuted = await IsCurrentUserMuted(sender.Id, recipient.Id, cancellationToken);
+
+        if (!isRecipientInChat && !isSenderMuted)
         {
             await hubContext.Clients
                 .User(recipient.Id.ToString())

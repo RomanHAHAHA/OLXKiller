@@ -25,7 +25,8 @@ public class SendVerificationCodeCommandHandler(
         await emailSender.SendMessageAsync(
             request.Email, 
             "Verification Code", 
-            $"Your verification code is: {code}");
+            $"Your verification code is: {code}",
+            cancellationToken);
 
         return ApiResponse.Ok();  
     }

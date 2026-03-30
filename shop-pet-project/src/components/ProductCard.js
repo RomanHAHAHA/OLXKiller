@@ -69,11 +69,6 @@ const ProductCard = ({ product }) => {
         navigate(`/products/${product.id}`);
     };
 
-    const handleQuickViewClick = (e) => {
-        e.stopPropagation();
-        navigate(`/products/${product.id}`);
-    };
-
     useEffect(() => {
         if (!connection) return;
 
@@ -140,13 +135,6 @@ const ProductCard = ({ product }) => {
                             ) : (
                                 <FaRegHeart className="text-muted" size={14} />
                             )}
-                        </button>
-                        <button 
-                            className="btn btn-sm btn-light rounded-circle p-1 d-flex align-items-center justify-content-center"
-                            style={{ width: '28px', height: '28px' }}
-                            onClick={handleQuickViewClick}
-                        >
-                            <FaEye className="text-muted" size={14} />
                         </button>
                     </div>
                 </div>
