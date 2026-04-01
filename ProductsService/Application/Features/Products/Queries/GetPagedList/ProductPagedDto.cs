@@ -14,5 +14,5 @@ public class ProductPagedDto
 
     public required string MainImagePath { get; init; } = string.Empty;
 
-    public required List<string> Categories { get; init; } = [];
+    public required string Category { get; init; } = string.Empty;
 }

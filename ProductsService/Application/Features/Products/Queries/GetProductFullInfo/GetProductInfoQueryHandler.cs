@@ -40,9 +40,7 @@ public class GetProductInfoQueryHandler(
             Rating = product.AverageRating,
             IsMine = !request.UserId.Equals(Guid.Empty) && product.UserId == request.UserId,
             Seller = new ProductSellerDto(product),
-            Categories = product.Categories
-                .Select(c => new ShortCategoryDto(c.Id, c.Name))
-                .ToList(),
+            Category = product.Category?.Name ?? "Unknown",
             Images = product.Images
                 .OrderByDescending(i => i.IsMain)
                 .Select(i => new ShortImageDto(i.Id, i.ImagePath))

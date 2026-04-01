@@ -24,7 +24,7 @@ public class GetProductsQueryHandler(
             Price = p.Price,
             IsAvailable = p.StockQuantity > 0,
             Rating = p.AverageRating,
-            Categories = p.Categories.Select(c => c.Name).ToList(),
+            Category = p.Category?.Name ?? "Unknown",
             MainImagePath = p.Images
                 .Where(i => i.IsMain)
                 .Select(i => i.ImagePath)

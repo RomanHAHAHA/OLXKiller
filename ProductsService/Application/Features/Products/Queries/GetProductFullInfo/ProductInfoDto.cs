@@ -22,7 +22,7 @@ public class ProductInfoDto
 
     public List<ShortImageDto> Images { get; set; } = [];
 
-    public List<ShortCategoryDto> Categories { get; set; } = [];
+    public string Category { get; set; } = string.Empty; 
 
     public List<ProductCharacteristicViewDto> Characteristics { get; set; } = [];
 }

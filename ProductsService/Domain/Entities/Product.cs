@@ -19,8 +19,10 @@ public sealed class Product : Entity<Guid>
     public int StockQuantity { get; set; }
 
     public double AverageRating { get; set; }
+    
+    public Guid? CategoryId { get; set; }
 
-    public List<Category> Categories { get; set; } = [];
+    public Category? Category { get; set; }
 
     public List<ProductImage> Images { get; set; } = [];
 

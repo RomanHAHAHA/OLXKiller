@@ -32,7 +32,7 @@ public class ProductsRepository(ProductsDbContext dbContext) :
         return await AppDbContext.Products
             .AsNoTracking()
             .AsSplitQuery()
-            .Include(p => p.Categories)
+            .Include(p => p.Category)
             .Include(p => p.Images)
             .Filter(productFilter)
             .Sort(sortParams)
@@ -48,7 +48,7 @@ public class ProductsRepository(ProductsDbContext dbContext) :
             .AsSplitQuery()
             .Include(p => p.User)
             .Include(p => p.Characteristics)
-            .Include(p => p.Categories)
+            .Include(p => p.Category)
             .Include(p => p.Images)
             .FirstOrDefaultAsync(p => p.Id == productId, cancellationToken);
     }
@@ -67,7 +67,7 @@ public class ProductsRepository(ProductsDbContext dbContext) :
         CancellationToken cancellationToken = default)
     {
         return await AppDbContext.Products
-            .Include(p => p.Categories)
+            //.Include(p => p.Categories)
             .FirstOrDefaultAsync(p => p.Id == productId, cancellationToken);
     }
     

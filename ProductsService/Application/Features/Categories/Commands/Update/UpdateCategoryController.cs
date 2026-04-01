@@ -3,7 +3,6 @@ using Common.API.Extensions;
 using Common.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
-using ProductsService.Application.Common.Dtos;
 
 namespace ProductsService.Application.Features.Categories.Commands.Update;
 
@@ -15,10 +14,10 @@ public class UpdateCategoryController(IMediator mediator) : ControllerBase
     [HasPermission(PermissionEnum.ManageCategories)]
     public async Task<IActionResult> UpdateCategoryAsync(
         Guid categoryId,
-        [FromBody] CategoryCreateDto categoryCreateDto,
+        [FromBody] CategoryUpdateDto categoryDto,
         CancellationToken cancellationToken)
     {
-        var command = new UpdateCategoryCommand(User.GetId(), categoryId, categoryCreateDto);
+        var command = new UpdateCategoryCommand(User.GetId(), categoryDto);
         var response = await mediator.Send(command, cancellationToken);
         return this.HandleResponse(response);
     }

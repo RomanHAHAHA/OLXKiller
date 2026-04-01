@@ -16,12 +16,16 @@ public class CategoriesConfiguration : IEntityTypeConfiguration<Category>
             .HasMaxLength(255)
             .IsRequired();
         
+        builder.Property(c => c.ParentCategoryId);
+        
+        builder.HasMany(c => c.SubCategories)
+            .WithOne(c => c.ParentCategory)
+            .HasForeignKey(c => c.ParentCategoryId);
+        
+        builder.HasMany(c => c.Products)
+            .WithOne(c => c.Category)
+            .HasForeignKey(c => c.CategoryId);
+        
         builder.HasIndex(c => c.Name).IsUnique();
-        
-        builder.Property(c => c.Description)
-            .HasMaxLength(1000)
-            .IsRequired();
-        
-        builder.HasMany(c => c.Products).WithMany(x => x.Categories);
     }
 }

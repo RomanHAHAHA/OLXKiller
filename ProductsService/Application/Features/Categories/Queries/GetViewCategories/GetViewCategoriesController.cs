@@ -6,13 +6,13 @@ namespace ProductsService.Application.Features.Categories.Queries.GetViewCategor
 
 [ApiController]
 [Route("api/categories")]
-public class GetCategoriesController(IMediator mediator) : ControllerBase
+public class GetViewCategoriesController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
     [AllowAnonymous]
     public async Task<IActionResult> GetCategoriesAsync(CancellationToken cancellationToken)
     {
-        var query = new GetCategoriesQuery();
+        var query = new GetViewCategoriesQuery();
         var categories = await mediator.Send(query, cancellationToken);
         return Ok(new { data = categories });
     }

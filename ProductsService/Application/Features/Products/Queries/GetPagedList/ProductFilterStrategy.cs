@@ -7,6 +7,7 @@ namespace ProductsService.Application.Features.Products.Queries.GetPagedList;
 
 public class ProductFilterStrategy : IFilterStrategy<Product, ProductFilter>
 {
+    //TODO:refactor
     public IQueryable<Product> Filter(IQueryable<Product> query, ProductFilter filter)
     {
         return query
@@ -17,7 +18,7 @@ public class ProductFilterStrategy : IFilterStrategy<Product, ProductFilter>
                     ? p.StockQuantity > 0
                     : p.StockQuantity == 0)
             .WhereIf(filter.Rating.HasValue, p => p.AverageRating >= filter.Rating)
-            .WhereIf(filter.Categories.Count != 0, p => p.Categories.Any(c => filter.Categories.Contains(c.Id)))
+            //.WhereIf(filter.Categories.Count != 0, p => p.Categories.Any(c => filter.Categories.Contains(c.Id)))
             .Where(GetFilterModePredicate(filter));
     }
     

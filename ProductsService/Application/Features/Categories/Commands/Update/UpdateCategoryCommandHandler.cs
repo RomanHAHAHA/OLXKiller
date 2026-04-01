@@ -8,7 +8,6 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using ProductsService.Domain.Entities;
-using ProductsService.Domain.Extensions;
 using ProductsService.Domain.Interfaces;
 
 namespace ProductsService.Application.Features.Categories.Commands.Update;
@@ -20,14 +19,19 @@ public class UpdateCategoryCommandHandler(
 {
     public async Task<ApiResponse> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
     {
-        var category = await categoriesRepository.GetByIdAsync(request.CategoryId, cancellationToken);
+        var category = await categoriesRepository.GetByIdAsync(request.Dto.Id, cancellationToken);
 
         if (category is null)
         {
             return ApiResponse.NotFound(nameof(Category));
         }
+
+        if (category.Name == request.Dto.Name)
+        {
+            return ApiResponse.BadRequest("New category name has to be different.");
+        }
         
-        category.UpdateFromCreateDto(request.CategoryCreateDto);
+        category.Name = request.Dto.Name;
         
         try
         {
@@ -56,7 +60,7 @@ public class UpdateCategoryCommandHandler(
                 SenderServiceName = serviceOptions.Value.Name,
                 UserId = request.InitiatorUserId,
                 ActionType = ActionType.Update,
-                Message = $"Category {request.CategoryId} updated"
+                Message = $"Category {request.Dto.Id} updated"
             }, cancellationToken);
     }
 }

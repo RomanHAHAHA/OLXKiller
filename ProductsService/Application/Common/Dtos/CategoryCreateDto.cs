@@ -1,3 +1,3 @@
 ﻿namespace ProductsService.Application.Common.Dtos;
 
-public record CategoryCreateDto(string Name, string Description);
+public record CategoryCreateDto(Guid? ParentCategoryId, string Name);

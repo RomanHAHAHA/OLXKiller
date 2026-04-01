@@ -42,7 +42,6 @@ const ChatWindow = () => {
       setCursor(messagesData.cursor);
       setHasMore(messagesData.hasMore);
       
-      // Устанавливаем флаг, что начальная загрузка завершена
       setInitialLoad(false);
       
       if (chatConnection?.state === HubConnectionState.Connected) {
@@ -79,11 +78,9 @@ const ChatWindow = () => {
     const scrollTop = container.scrollTop;
     scrollPositionRef.current = scrollTop;
     
-    // Определяем, прокрутил ли пользователь вверх
     const isScrolledUp = scrollTop < container.scrollHeight - container.clientHeight - 100;
     setUserScrolledUp(isScrolledUp);
     
-    // Если близко к верху и есть еще сообщения - подгружаем
     if (scrollTop < 100 && hasMore && !isLoadingMessages) {
       setIsLoadingMessages(true);
       const prevScrollHeight = container.scrollHeight;
@@ -92,7 +89,6 @@ const ChatWindow = () => {
         .then(data => {
           setMessages(prev => [...data.messages, ...prev]);
           
-          // Сохраняем позицию скролла после добавления новых сообщений
           requestAnimationFrame(() => {
             if (messagesContainerRef.current) {
               messagesContainerRef.current.scrollTop = 
@@ -107,7 +103,6 @@ const ChatWindow = () => {
     }
   }, [chatId, cursor, hasMore, isLoadingMessages, fetchMessages]);
 
-  // Подписка на события SignalR
   useEffect(() => {
     if (!chatConnection) return;
 
@@ -117,7 +112,6 @@ const ChatWindow = () => {
         return [...prev, message];
       });
       
-      // Скроллим вниз только если пользователь не прокручивал вверх
       if (!userScrolledUp) {
         setTimeout(() => {
           messagesContainerRef.current?.scrollTo({

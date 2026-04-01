@@ -19,6 +19,11 @@ public class CreateCategoryCommandHandler(
 {
     public async Task<ApiResponse> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
     {
+        if (await CategoryExistsAsync(request, cancellationToken))
+        {
+            return ApiResponse.NotFound("Parent category");
+        }
+        
         var category = Category.FromCreateDto(request.CategoryCreateDto); 
         await categoriesRepository.CreateAsync(category, cancellationToken);
 
@@ -51,5 +56,13 @@ public class CreateCategoryCommandHandler(
                 ActionType = ActionType.Create,
                 Message = $"Category \"{request.CategoryCreateDto.Name}\" created"
             }, cancellationToken);
+    }
+
+    private async Task<bool> CategoryExistsAsync(CreateCategoryCommand request, CancellationToken cancellationToken)
+    {
+        return request.CategoryCreateDto.ParentCategoryId is not null &&
+               !await categoriesRepository.ExistsAsync(
+                   request.CategoryCreateDto.ParentCategoryId.Value,
+                   cancellationToken);
     }
 }

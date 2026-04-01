@@ -1,4 +1,5 @@
 ﻿using Common.Domain.Abstractions;
+using Microsoft.EntityFrameworkCore;
 using ProductsService.Domain.Entities;
 using ProductsService.Domain.Interfaces;
 
