@@ -1,4 +1,123 @@
-.btn-accent {
+/* CategoryForm.css */
+.category-form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.category-form-modal {
+  background-color: var(--card-bg);
+  border-radius: 10px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.category-form-modal h3 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: var(--text);
+  font-size: 1.5rem;
+}
+
+.category-form-info-message {
+  background-color: rgba(114, 57, 234, 0.1);
+  border-left: 3px solid var(--primary);
+  padding: 0.75rem;
+  margin-bottom: 1.5rem;
+  border-radius: 4px;
+}
+
+.category-form-info-message p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.category-form-group {
+  margin-bottom: 1.5rem;
+}
+
+.category-form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.category-form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--darker-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.category-form-group input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(114, 57, 234, 0.2);
+}
+
+.category-form-group input.error {
+  border-color: var(--danger);
+}
+
+.category-form-error {
+  color: var(--danger);
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.category-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+/* Кнопка Cancel - стиль danger */
+.category-form-cancel {
+  background: transparent;
+  border: 2px solid var(--danger);
+  color: var(--danger);
+  font-weight: 500;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+}
+
+.category-form-cancel:hover {
+  background-color: var(--danger);
+  color: white;
+}
+
+.category-form-cancel:disabled {
+  border-color: #6c757d;
+  color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Кнопка Submit - стиль accent */
+.category-form-submit {
   background-color: #4ecca3;
   border: none;
   color: #1a1a2e;
@@ -14,75 +133,29 @@
   position: relative;
   overflow: hidden;
   min-width: 120px;
-
-  &:hover {
-    background-color: #3dbd95;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(78, 204, 163, 0.3);
-  }
-
-  &:active {
-    background-color: #2fad85;
-    transform: translateY(0);
-    box-shadow: 0 2px 6px rgba(78, 204, 163, 0.3);
-  }
-
-  &:disabled {
-    background-color: #6c757d !important;
-    cursor: not-allowed;
-    opacity: 0.7;
-    transform: none !important;
-    box-shadow: none !important;
-  }
-
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(78, 204, 163, 0.5);
-  }
-
-  .btn-accent-icon {
-    color: inherit;
-    transition: inherit;
-  }
 }
 
-.btn-accent-spinner {
-  animation: spin 1s linear infinite;
+.category-form-submit:hover {
+  background-color: #3dbd95;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(78, 204, 163, 0.3);
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+.category-form-submit:active {
+  background-color: #2fad85;
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(78, 204, 163, 0.3);
 }
 
-.btn-accent-outline {
-  background: transparent;
-  border: 2px solid #4ecca3;
-  color: #4ecca3;
-  font-weight: 500;
-  border-radius: 6px;
-  padding: 0.5rem 1rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  min-width: 120px;
+.category-form-submit:disabled {
+  background-color: #6c757d !important;
+  cursor: not-allowed;
+  opacity: 0.7;
+  transform: none !important;
+  box-shadow: none !important;
+}
 
-  &:hover {
-    background-color: #4ecca3;
-    color: #1a1a2e;
-  }
-
-  &:disabled {
-    border-color: #6c757d;
-    color: #6c757d;
-    cursor: not-allowed;
-    opacity: 0.7;
-  }
-
-  .btn-accent-icon {
-    color: inherit;
-  }
+.category-form-submit:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(78, 204, 163, 0.5);
 }

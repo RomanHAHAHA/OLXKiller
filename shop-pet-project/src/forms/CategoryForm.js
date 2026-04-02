@@ -1,51 +1,85 @@
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import { API_BASE_URL } from '../apiConfig';
+import '../Styles/CategoryFormStyle.css'; 
 
-const CategoryForm = ({ isOpen, onClose, onSubmit, category }) => {
-  const [formData, setFormData] = useState({ name: '', description: '' });
+const CategoryForm = ({ isOpen, onClose, onSubmit, category, parentCategoryId }) => {
+  const [formData, setFormData] = useState({ name: '' });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   useEffect(() => {
-    if (category) {
-      setFormData({
-        name: category.name || '',
-        description: category.description || '',
-        id: category.id
-      });
-    } else {
-      setFormData({ name: '', description: '' });
+    if (isOpen) {
+      console.log('Form is open, category:', category, 'parentId:', parentCategoryId);
+      if (category && category.id) {
+        setFormData({
+          name: category.name || '',
+          id: category.id
+        });
+        setIsEditMode(true);
+      } else {
+        setFormData({ name: '' });
+        setIsEditMode(false);
+      }
+      setErrors({});
     }
-    setErrors({});
-  }, [category, isOpen]);
+  }, [category, parentCategoryId, isOpen]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!formData.name.trim()) {
+      setErrors({ name: 'Category name is required' });
+      return;
+    }
+    
     setIsSubmitting(true);
     
     try {
-      const method = formData.id ? 'PATCH' : 'POST';
-      const url = formData.id 
-        ? `${API_BASE_URL}products-api/api/categories/${formData.id}`
-        : `${API_BASE_URL}products-api/api/categories`;
+      let url, method, body;
+
+      if (isEditMode) {
+        url = `${API_BASE_URL}products-api/api/categories/${formData.id}`;
+        method = 'PATCH';
+        body = JSON.stringify({
+          id: formData.id,
+          name: formData.name.trim()
+        });
+      } else {
+        url = `${API_BASE_URL}products-api/api/categories`;
+        method = 'POST';
+        body = JSON.stringify({
+          parentCategoryId: parentCategoryId || null,
+          name: formData.name.trim()
+        });
+      }
 
       const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body,
         credentials: 'include'
       });
       
-      const responseData = await response.json();
+      let responseData;
+      try {
+        responseData = await response.json();
+      } catch (e) {
+        responseData = {};
+      }
       
       if (!response.ok) {
         if (response.status === 400) {
           const validationErrors = {};
-          for (const field in responseData.errors) {
-            if (responseData.errors[field]?.length > 0) {
-              validationErrors[field.toLowerCase()] = responseData.errors[field][0];
+          if (responseData.errors) {
+            for (const field in responseData.errors) {
+              if (responseData.errors[field]?.length > 0) {
+                validationErrors[field.toLowerCase()] = responseData.errors[field][0];
+              }
             }
+          } else if (responseData.message) {
+            throw new Error(responseData.message);
           }
           setErrors(validationErrors);
           return;
@@ -58,12 +92,16 @@ const CategoryForm = ({ isOpen, onClose, onSubmit, category }) => {
       
       Swal.fire({
         icon: 'success',
-        title: formData.id ? 'Category updated' : 'Category created',
+        title: isEditMode ? 'Category updated' : 'Category created',
         background: '#1e1e2d',
         color: '#fff',
-        timer: 2000
+        timer: 2000,
+        showConfirmButton: false
       });
     } catch (error) {
+      // Закрываем форму перед показом ошибки
+      onClose();
+      
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -84,105 +122,59 @@ const CategoryForm = ({ isOpen, onClose, onSubmit, category }) => {
     }
   };
 
+  const getModalTitle = () => {
+    if (isEditMode) return 'Edit Category';
+    if (parentCategoryId) return 'Add Subcategory';
+    return 'Add Root Category';
+  };
+
   if (!isOpen) return null;
 
   return (
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: 'rgba(0,0,0,0.5)',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      zIndex: 1000
-    }}>
-      <div style={{
-        background: '#2a2a3c',
-        padding: '20px',
-        borderRadius: '8px',
-        width: '90%',
-        maxWidth: '500px'
-      }}>
-        <h3 style={{ color: 'white', marginTop: 0 }}>
-          {formData.id ? 'Edit Category' : 'Add New Category'}
-        </h3>
+    <div className="category-form-overlay">
+      <div className="category-form-modal">
+        <h3>{getModalTitle()}</h3>
+        
+        {parentCategoryId && !isEditMode && (
+          <div className="category-form-info-message">
+            <p>Creating subcategory under parent category</p>
+          </div>
+        )}
+        
         <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', color: '#b8b8d2', marginBottom: '5px' }}>Name</label>
+          <div className="category-form-group">
+            <label>Name *</label>
             <input
               type="text"
               name="name"
               value={formData.name}
               onChange={handleChange}
-              style={{
-                width: '100%',
-                padding: '8px',
-                background: '#1e1e2d',
-                border: errors.name ? '1px solid #dc3545' : '1px solid #444',
-                borderRadius: '4px',
-                color: 'white'
-              }}
+              placeholder="Enter category name"
+              className={errors.name ? 'error' : ''}
+              autoFocus
             />
             {errors.name && (
-              <div style={{ 
-                color: '#dc3545', 
-                fontSize: '0.875rem',
-                marginTop: '5px'
-              }}>
+              <div className="category-form-error">
                 {errors.name}
               </div>
             )}
           </div>
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', color: '#b8b8d2', marginBottom: '5px' }}>Description</label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              rows="4"
-              style={{
-                width: '100%',
-                padding: '8px',
-                background: '#1e1e2d',
-                border: errors.description ? '1px solid #dc3545' : '1px solid #444',
-                borderRadius: '4px',
-                color: 'white',
-                minHeight: '100px'
-              }}
-            />
-            {errors.description && (
-              <div style={{ 
-                color: '#dc3545', 
-                fontSize: '0.875rem',
-                marginTop: '5px'
-              }}>
-                {errors.description}
-              </div>
-            )}
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+          
+          <div className="category-form-actions">
             <button 
               type="button" 
               onClick={onClose}
               disabled={isSubmitting}
-              className='btn-accent red'
+              className="category-form-cancel"
             >
               Cancel
             </button>
             <button 
               type="submit"
               disabled={isSubmitting}
-              className='btn-accent-outline'
+              className="category-form-submit"
             >
-              {isSubmitting ? (
-                <>
-                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                  Processing...
-                </>
-              ) : (formData.id ? 'Save' : 'Create')}
+              {isSubmitting ? 'Processing...' : (isEditMode ? 'Save Changes' : 'Create')}
             </button>
           </div>
         </form>

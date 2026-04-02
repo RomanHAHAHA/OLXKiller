@@ -9,7 +9,9 @@ public class Category : Entity<Guid>
 
     public Guid? ParentCategoryId { get; set; }
 
-    public Category? ParentCategory { get; set; } 
+    public Category? ParentCategory { get; set; }
+
+    public int Level { get; set; }
     
     public List<Category> SubCategories { get; set; } = [];
     

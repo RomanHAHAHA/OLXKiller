@@ -5,10 +5,14 @@
   --primary-hover: #5d2ac2;
   --danger: #f1416c;
   --danger-hover: #d9214e;
+  --warning: #ffc700;
+  --warning-hover: #ffb300;
   --text: #e1e1e8;
   --text-secondary: #92929f;
   --border: #323248;
   --card-bg: #2b2b40;
+  --hover-bg: rgba(255, 255, 255, 0.03);
+  --success: #4ecca3;
 }
 
 body {
@@ -28,6 +32,8 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .categories-header h2 {
@@ -36,7 +42,8 @@ body {
   margin: 0;
 }
 
-.btn-add {
+/* Button variations */
+.btn-accent {
   background-color: var(--primary);
   color: white;
   border: none;
@@ -44,165 +51,361 @@ body {
   border-radius: 6px;
   cursor: pointer;
   font-weight: 500;
-  transition: background-color 0.2s;
-}
-
-.btn-add:hover {
-  background-color: var(--primary-hover);
-}
-
-.categories-table-container {
-  background-color: var(--card-bg);
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-}
-
-.categories-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.categories-table th,
-.categories-table td {
-  padding: 1rem;
-  text-align: left;
-}
-
-.categories-table th {
-  background-color: var(--darker-bg);
-  color: var(--text);
-  font-weight: 600;
-}
-
-.categories-table tr {
-  border-bottom: 1px solid var(--border);
-}
-
-.categories-table tr:last-child {
-  border-bottom: none;
-}
-
-.categories-table tr:hover {
-  background-color: rgba(255, 255, 255, 0.03);
-}
-
-.actions {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.btn-edit,
-.btn-delete,
-.btn-cancel,
-.btn-save {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 500;
   transition: all 0.2s;
 }
 
-.btn-edit {
-  background-color: rgba(114, 57, 234, 0.1);
+.btn-accent:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.btn-accent-outline {
+  background-color: transparent;
+  border: 1px solid var(--primary);
   color: var(--primary);
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  white-space: nowrap;
 }
 
-.btn-edit:hover {
-  background-color: rgba(114, 57, 234, 0.2);
+.btn-accent-outline:hover {
+  background-color: var(--primary);
+  color: white;
+  transform: translateY(-1px);
 }
 
-.btn-delete {
-  background-color: rgba(241, 65, 108, 0.1);
+.btn-accent-outline.yellow {
+  border-color: var(--warning);
+  color: var(--warning);
+}
+
+.btn-accent-outline.yellow:hover {
+  background-color: var(--warning);
+  color: var(--dark-bg);
+}
+
+.btn-accent-outline.red {
+  border-color: var(--danger);
   color: var(--danger);
 }
 
-.btn-delete:hover {
-  background-color: rgba(241, 65, 108, 0.2);
-}
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal {
-  background-color: var(--card-bg);
-  border-radius: 10px;
-  padding: 2rem;
-  width: 100%;
-  max-width: 500px;
-}
-
-.modal h3 {
-  margin-top: 0;
-  margin-bottom: 1.5rem;
-  color: var(--text);
-}
-
-.form-group {
-  margin-bottom: 1.5rem;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  color: var(--text-secondary);
-}
-
-.form-group input,
-.form-group textarea {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: var(--darker-bg);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text);
-}
-
-.form-group textarea {
-  resize: vertical;
-  min-height: 100px;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
-.btn-cancel {
-  background-color: transparent;
-  color: var(--text-secondary);
-}
-
-.btn-cancel:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
-.btn-save {
-  background-color: var(--primary);
+.btn-accent-outline.red:hover {
+  background-color: var(--danger);
   color: white;
 }
 
-.btn-save:hover {
-  background-color: var(--primary-hover);
+/* Tree view styles */
+.categories-tree-container {
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
+.category-tree-node {
+  border-bottom: 1px solid var(--border);
+}
+
+.category-tree-node:last-child {
+  border-bottom: none;
+}
+
+.category-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.category-row:hover {
+  background-color: var(--hover-bg);
+}
+
+.category-row.selected-category {
+  background-color: rgba(78, 204, 163, 0.1);
+  border-left: 3px solid var(--success);
+}
+
+.category-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+/* Кнопка раскрытия - полностью прозрачная, без фона и градиентов */
+.expand-btn {
+  background: transparent !important;
+  border: none !important;
+  color: var(--text-secondary) !important;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  box-shadow: none !important;
+}
+
+.expand-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: var(--text) !important;
+  transform: scale(1.1);
+}
+
+.expand-btn:active {
+  transform: scale(0.95);
+}
+
+.expand-btn:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Убираем все возможные стили для кнопки от браузера */
+.expand-btn::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+.expand-placeholder {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.category-details {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.category-name {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.parent-category-text {
+  color: var(--text-secondary);
+  opacity: 0.7;
+  font-size: 0.85rem;
+}
+
+.product-count {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  background-color: rgba(114, 57, 234, 0.15);
+  padding: 0.2rem 0.5rem;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.category-children {
+  /* No additional styles needed, indentation handled by padding */
+}
+
+/* Hover buttons - появляются только при наведении */
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.actions-hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.actions-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Category select button */
+.category-select-btn {
+  background-color: transparent;
+  border: 2px solid var(--success);
+  color: var(--success);
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+  min-width: 100px;
+}
+
+.category-select-btn:hover:not(:disabled) {
+  background-color: var(--success);
+  color: #1a1a2e;
+  transform: translateY(-1px);
+}
+
+.category-select-btn.selected {
+  background-color: var(--success);
+  border-color: var(--success);
+  color: #1a1a2e;
+}
+
+.category-select-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Loading and empty states */
 .loading {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 200px;
   color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-secondary);
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* Анимация для появления кнопок */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.actions-visible .btn-accent-outline {
+  animation: fadeIn 0.2s ease forwards;
+}
+
+.actions-visible .btn-accent-outline:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.actions-visible .btn-accent-outline:nth-child(2) {
+  animation-delay: 0.05s;
+}
+
+.actions-visible .btn-accent-outline:nth-child(3) {
+  animation-delay: 0.1s;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--darker-bg);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-hover);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .categories-admin {
+    padding: 1rem;
+  }
+  
+  .category-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .category-info {
+    width: 100%;
+  }
+  
+  .actions {
+    width: 100%;
+    justify-content: flex-start;
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .actions-hidden {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .btn-accent-outline {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.75rem;
+  }
+  
+  .expand-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 0.8rem;
+  }
+  
+  .expand-placeholder {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* Utility classes */
+.d-flex {
+  display: flex;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.mt-4 {
+  margin-top: 2rem;
+}
+
+/* Additional hover effects for better UX */
+.category-row:hover .category-name {
+  color: var(--primary);
+  transition: color 0.2s;
+}
+
+.product-count {
+  transition: all 0.2s;
+}
+
+.category-row:hover .product-count {
+  background-color: rgba(114, 57, 234, 0.25);
+  color: var(--text);
 }

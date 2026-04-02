@@ -19,19 +19,14 @@ public class CreateCategoryCommandHandler(
 {
     public async Task<ApiResponse> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
     {
-        if (await CategoryExistsAsync(request, cancellationToken))
-        {
-            return ApiResponse.NotFound("Parent category");
-        }
-        
-        var category = Category.FromCreateDto(request.CategoryCreateDto); 
-        await categoriesRepository.CreateAsync(category, cancellationToken);
-
         try
         {
+            var category = await CreateCategoryEntity(request, cancellationToken);
+            
+            await categoriesRepository.CreateAsync(category, cancellationToken);
             await OnCategoryCreated(request, cancellationToken);
+            
             var created = await categoriesRepository.SaveChangesAsync(cancellationToken);
-
             return created ? ApiResponse.Ok() : ApiResponse.InternalServerError();
         }
         catch (DbUpdateException exception) when 
@@ -45,6 +40,35 @@ public class CreateCategoryCommandHandler(
         }
     }
 
+    private async Task<Category> CreateCategoryEntity(CreateCategoryCommand request, CancellationToken cancellationToken)
+    {
+        var parentCategoryId = request.CategoryCreateDto.ParentCategoryId;
+        
+        if (parentCategoryId is null)
+        {
+            return new Category
+            {
+                Name = request.CategoryCreateDto.Name,
+                ParentCategoryId = null,
+                Level = 0
+            };
+        }
+
+        var parentCategory = await categoriesRepository.GetByIdAsync(parentCategoryId.Value, cancellationToken);
+        
+        if (parentCategory is null)
+        {
+            throw new InvalidOperationException("Parent category not found");
+        }
+
+        return new Category
+        {
+            Name = request.CategoryCreateDto.Name,
+            ParentCategoryId = parentCategoryId,
+            Level = parentCategory.Level + 1
+        };
+    }
+
     private async Task OnCategoryCreated(CreateCategoryCommand request, CancellationToken cancellationToken)
     {
         await publishEndpoint.Publish(
@@ -56,13 +80,5 @@ public class CreateCategoryCommandHandler(
                 ActionType = ActionType.Create,
                 Message = $"Category \"{request.CategoryCreateDto.Name}\" created"
             }, cancellationToken);
-    }
-
-    private async Task<bool> CategoryExistsAsync(CreateCategoryCommand request, CancellationToken cancellationToken)
-    {
-        return request.CategoryCreateDto.ParentCategoryId is not null &&
-               !await categoriesRepository.ExistsAsync(
-                   request.CategoryCreateDto.ParentCategoryId.Value,
-                   cancellationToken);
     }
 }

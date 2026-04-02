@@ -9,11 +9,11 @@ namespace ProductsService.Application.Features.Categories.Commands.SetProductCat
 [Route("api/products")]
 public class SetProductCategoryController(IMediator mediator) : ControllerBase
 {
-    [HttpPost("{productId:guid}/category/{categoryId:guid?}")]
+    [HttpPatch("{productId:guid}/category")]
     [Authorize]
     public async Task<IActionResult> AddCategoryAsync(
         Guid productId,
-        Guid? categoryId,
+        [FromQuery] Guid? categoryId,
         CancellationToken cancellationToken)
     {
         var command = new SetProductCategoryCommand(productId, categoryId);

@@ -142,7 +142,7 @@ const ProductCard = ({ product }) => {
                 <div className="card-body p-3 d-flex flex-column">
                     <div className="mb-2">
                         <h6 className="card-title text-white mb-1 text-truncate">{product.name}</h6>
-                        <small className="d-block mb-1 text-gray">{product.categories.join(", ")}</small>
+                        <small className="d-block mb-1 text-gray">{product.category}</small>
                     </div>
                     
                     <div className="mt-auto">

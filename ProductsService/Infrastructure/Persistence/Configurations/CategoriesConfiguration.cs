@@ -17,6 +17,7 @@ public class CategoriesConfiguration : IEntityTypeConfiguration<Category>
             .IsRequired();
         
         builder.Property(c => c.ParentCategoryId);
+        builder.Property(c => c.Level).HasDefaultValue(0);
         
         builder.HasMany(c => c.SubCategories)
             .WithOne(c => c.ParentCategory)

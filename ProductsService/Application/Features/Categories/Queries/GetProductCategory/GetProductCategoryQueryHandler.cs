@@ -19,7 +19,7 @@ public class GetProductCategoryQueryHandler(
             .Where(p => p.Id == request.ProductId)
             .Select(p => p.Category == null 
                 ? null 
-                : new ShortCategoryDto(p.Category.Id, p.Category.Name))
+                : new ShortCategoryDto(p.CategoryId!.Value, p.Category.Name))
             .FirstOrDefaultAsync(cancellationToken);
 
         return category is null

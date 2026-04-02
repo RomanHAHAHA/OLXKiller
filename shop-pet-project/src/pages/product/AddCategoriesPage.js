@@ -3,18 +3,17 @@ import { useParams, useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../../apiConfig";
 import Swal from "sweetalert2";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import "../../Styles/CategoriesAdmin.css";
 
 const AddCategoriesPage = () => {
     const { productId } = useParams();
     const navigate = useNavigate();
     
     const [allCategories, setAllCategories] = useState([]);
-    const [productCategories, setProductCategories] = useState(new Set());
-    const [loading, setLoading] = useState({
-        categories: true,
-        productCategories: true
-    });
-    const [categoryLoading, setCategoryLoading] = useState(null);
+    const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [categoryLoading, setCategoryLoading] = useState(false);
+    const [expandedNodes, setExpandedNodes] = useState(new Set());
 
     const fetchAllCategories = async () => {
         try {
@@ -22,6 +21,10 @@ const AddCategoriesPage = () => {
             if (!response.ok) throw new Error("Failed to fetch categories");
             const categories = (await response.json()).data; 
             setAllCategories(categories);
+            
+            // Auto-expand root nodes
+            const rootIds = categories.map(cat => cat.id);
+            setExpandedNodes(new Set(rootIds));
         } catch (err) {
             Swal.fire({
                 title: "Error",
@@ -30,161 +33,234 @@ const AddCategoriesPage = () => {
                 confirmButtonColor: "#4ecca3"
             });
         } finally {
-            setLoading(prev => ({ ...prev, categories: false }));
+            setLoading(false);
         }
     };
 
-    const fetchProductCategories = async () => {
+    const fetchProductCategory = async () => {
         try {
             const response = await fetch(
-                `${API_BASE_URL}products-api/api/products/${productId}/categories`
+                `${API_BASE_URL}products-api/api/products/${productId}/category`
             );
-            if (!response.ok) throw new Error("Failed to fetch product categories");
+            if (!response.ok) throw new Error("Failed to fetch product category");
             
-            const categories = (await response.json()).data; 
-            setProductCategories(new Set(categories.map(c => c.id)));
+            const category = (await response.json()).data;
+            console.log("Product category:", category.id); // Отладка
+            setSelectedCategoryId(category?.id || null);
         } catch (err) {
-            Swal.fire({
-                title: "Error",
-                text: err.message,
-                icon: "error",
-                confirmButtonColor: "#4ecca3"
-            });
-        } finally {
-            setLoading(prev => ({ ...prev, productCategories: false }));
+            console.log("No category selected");
+            setSelectedCategoryId(null);
         }
     };
 
-    const toggleCategory = async (categoryId) => {
-        const isSelected = productCategories.has(categoryId);
-        const method = isSelected ? "DELETE" : "POST";
-        const url = `${API_BASE_URL}products-api/api/products/${productId}/categories/${categoryId}`;
+    const setProductCategory = async (categoryId) => {
+        const url = `${API_BASE_URL}products-api/api/products/${productId}/category?categoryId=${categoryId}`;
 
         try {
-            setCategoryLoading(categoryId);
-            const response = await fetch(url, { method, credentials: "include" });
-
-            if (!response.ok) throw new Error("Operation failed");
-
-            setProductCategories(prev => {
-                const updated = new Set(prev);
-                isSelected ? updated.delete(categoryId) : updated.add(categoryId);
-                return updated;
+            setCategoryLoading(true);
+            const response = await fetch(url, { 
+                method: "PATCH", 
+                credentials: "include" 
             });
+
+            if (!response.ok) throw new Error("Failed to set category");
+
+            setSelectedCategoryId(categoryId);
         } catch (err) {
             Swal.fire({
                 title: "Error",
                 text: err.message,
                 icon: "error",
-                confirmButtonColor: "#4ecca3"
+                confirmButtonColor: "#4ecca3",
+                background: "#1e1e2d",
+                color: "#fff"
             });
         } finally {
-            setCategoryLoading(null);
+            setCategoryLoading(false);
+        }
+    };
+
+    const removeProductCategory = async () => {
+        const url = `${API_BASE_URL}products-api/api/products/${productId}/category`;
+
+        try {
+            setCategoryLoading(true);
+            const response = await fetch(url, { 
+                method: "PATCH", 
+                credentials: "include" 
+            });
+            
+            var message = await response.json();
+            console.log("Remove category response:", message); // Отладка
+            if (!response.ok) throw new Error("Failed to remove category");
+
+            setSelectedCategoryId(null);
+        } catch (err) {
+            Swal.fire({
+                title: "Error",
+                text: err.message,
+                icon: "error",
+                confirmButtonColor: "#4ecca3",
+                background: "#1e1e2d",
+                color: "#fff"
+            });
+        } finally {
+            setCategoryLoading(false);
+        }
+    };
+
+    const handleCategorySelect = (categoryId) => {
+        if (selectedCategoryId === categoryId) {
+            removeProductCategory();
+        } else {
+            setProductCategory(categoryId);
         }
     };
 
     const handleBack = () => navigate(`/products/${productId}/update`);
     const handleContinue = () => {
-        if (productCategories.size === 0) {
-            Swal.fire({
-                title: "No categories selected",
-                text: "Are you sure you want to continue without categories?",
-                icon: "question",
-                showCancelButton: true,
-                confirmButtonColor: "#4ecca3",
-                cancelButtonColor: "#ff4444",
-                confirmButtonText: "Continue anyway",
-                cancelButtonText: "Select categories"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    navigate(`/products/${productId}/add-images`);
-                }
-            });
-        } else {
-            navigate(`/products/${productId}/add-images`);
-        }
+        navigate(`/products/${productId}/add-images`);
     };
+
+    const toggleExpand = (categoryId) => {
+        setExpandedNodes(prev => {
+            const newSet = new Set(prev);
+            if (newSet.has(categoryId)) {
+                newSet.delete(categoryId);
+            } else {
+                newSet.add(categoryId);
+            }
+            return newSet;
+        });
+    };
+
+    // Раскрываем родителей для выбранной категории
+    useEffect(() => {
+        if (selectedCategoryId && allCategories.length > 0) {
+            const findAndExpandParents = (categories, targetId) => {
+                for (const cat of categories) {
+                    if (cat.id === targetId) {
+                        return true;
+                    }
+                    if (cat.children && cat.children.length > 0) {
+                        if (findAndExpandParents(cat.children, targetId)) {
+                            setExpandedNodes(prev => new Set([...prev, cat.id]));
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            };
+            findAndExpandParents(allCategories, selectedCategoryId);
+        }
+    }, [selectedCategoryId, allCategories]);
 
     useEffect(() => {
         fetchAllCategories();
-        fetchProductCategories();
+        fetchProductCategory();
     }, [productId]);
 
-    const isLoading = loading.categories || loading.productCategories;
+    const renderCategoryTree = (category, level = 0) => {
+        const hasChildren = category.children && category.children.length > 0;
+        const isExpanded = expandedNodes.has(category.id);
+        const paddingLeft = level === 0 ? 8 : level * 24;
+        const isSelected = selectedCategoryId === category.id; // ПРОСТОЕ СРАВНЕНИЕ ID
+        const isLeaf = !hasChildren;
 
-    return (
-        <div className="container mt-5" style={{ maxWidth: '800px' }}>
-            <div className="text-center mb-4">
-                <h2 className="text-light mb-0" style={{ color: "#4ecca3" }}>
-                    Product Categories
-                </h2>
-                <div style={{ width: "100px" }}></div> 
-            </div>
-
-            {isLoading ? (
-                <div className="text-center py-5">
-                    <div className="spinner-border text-primary" role="status">
-                        <span className="visually-hidden">Loading...</span>
+        return (
+            <div key={category.id} className="category-tree-node">
+                <div 
+                    className="category-row"
+                    style={{ 
+                        paddingLeft: `${paddingLeft}px`,
+                        backgroundColor: isSelected ? 'rgba(78, 204, 163, 0.15)' : 'transparent',
+                        borderLeft: isSelected ? '3px solid #4ecca3' : 'none'
+                    }}
+                >
+                    <div className="category-info">
+                        {hasChildren && (
+                            <button 
+                                className="expand-btn"
+                                onClick={() => toggleExpand(category.id)}
+                                type="button"
+                            >
+                                {isExpanded ? (
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                                ) : (
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                                )}
+                            </button>
+                        )}
+                        {!hasChildren && <span className="expand-placeholder"></span>}
+                        <div className="category-details">
+                            <span style={{ 
+                                color: isSelected ? '#4ecca3' : 'var(--text)',
+                                fontWeight: isSelected ? 'bold' : 'normal'
+                            }}>
+                                {category.name}
+                            </span>
+                        </div>
+                    </div>
+                    <div className="actions">
+                        {isLeaf && (
+                            <button 
+                                className={`category-select-btn ${isSelected ? 'selected' : ''}`}
+                                onClick={() => handleCategorySelect(category.id)}
+                                disabled={categoryLoading}
+                            >
+                                {isSelected ? '✓ Selected' : 'Select'}
+                            </button>
+                        )}
                     </div>
                 </div>
-            ) : (
-                <>
-                    <div className="list-group mb-4">
-                        {allCategories.map((category) => (
-                            <label 
-                                key={category.id} 
-                                className={`list-group-item d-flex align-items-center bg-dark text-light`}
-                                style={{ transition: "all 0.3s ease" }}
-                            >
-                                <div className="form-check form-switch me-3">
-                                    <input
-                                        type="checkbox"
-                                        className="form-check-input"
-                                        checked={productCategories.has(category.id)}
-                                        disabled={categoryLoading === category.id}
-                                        onChange={() => toggleCategory(category.id)}
-                                        style={{ 
-                                            cursor: "pointer",
-                                            backgroundColor: productCategories.has(category.id) 
-                                                ? "#4ecca3" 
-                                                : "",
-                                            borderColor: productCategories.has(category.id) 
-                                                ? "#4ecca3" 
-                                                : ""
-                                        }}
-                                    />
-                                </div>
-                                <span className="flex-grow-1">{category.name}</span>
-                                {categoryLoading === category.id && (
-                                    <div className="spinner-border spinner-border-sm text-light ms-2" 
-                                         role="status">
-                                        <span className="visually-hidden">Loading...</span>
-                                    </div>
-                                )}
-                            </label>
-                        ))}
+                {hasChildren && isExpanded && (
+                    <div className="category-children">
+                        {category.children.map(child => renderCategoryTree(child, level + 1))}
                     </div>
-                    
-                    <div className="d-flex justify-content-between mt-4">
-                        <button 
-                            onClick={handleBack}
-                            className="btn-accent-outline"
-                        >
-                            <FaArrowLeft className="me-2" />
-                            Back
-                        </button>
-                        
-                        <button 
-                            className="btn-accent-outline"
-                            onClick={handleContinue}
-                            disabled={categoryLoading !== null}
-                        >
-                            Continue
-                            <FaArrowRight className="ms-2" />
-                        </button>
+                )}
+            </div>
+        );
+    };
+
+    if (loading) return <div className="loading">Loading categories...</div>;
+
+    return (
+        <div className="categories-admin">
+            <div className="categories-header">
+                <h2>Product Category</h2>
+            </div>
+
+            <div className="categories-tree-container">
+                {allCategories.length === 0 ? (
+                    <div className="empty-state">
+                        <p>No categories available</p>
                     </div>
-                </>
-            )}
+                ) : (
+                    allCategories.map(category => renderCategoryTree(category))
+                )}
+            </div>
+            
+            <div className="d-flex justify-content-between mt-4">
+                <button 
+                    onClick={handleBack}
+                    className="btn-accent-outline"
+                >
+                    <FaArrowLeft className="me-2" />
+                    Back
+                </button>
+                
+                <button 
+                    className="btn-accent"
+                    onClick={handleContinue}
+                >
+                    Continue
+                    <FaArrowRight className="ms-2" />
+                </button>
+            </div>
         </div>
     );
 };

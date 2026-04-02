@@ -23,11 +23,17 @@ public class SetProductCategoryCommandHandler(
             return await UpdateProductCategory(product, null, cancellationToken);
         }
 
-        var category = await categoriesRepository.GetByIdAsync(request.CategoryId.Value, cancellationToken);
+        var category = await categoriesRepository
+            .GetCategoryWithSubFlagAsync(request.CategoryId.Value, cancellationToken);
 
         if (category is null)
         {
             return ApiResponse.NotFound(nameof(Category));
+        }
+
+        if (category.HasSubCategories)
+        {
+            return ApiResponse.Conflict("Choose the last child category");
         }
 
         return await UpdateProductCategory(product, category.Id, cancellationToken);

@@ -306,11 +306,9 @@ const ProductPage = () => {
             </div>
 
             <div className={styles.categoryTags}>
-              {product.categories.map(category => (
-                <span key={category.id} className={styles.categoryTag}>
-                  {category.name}
+                <span className={styles.categoryTag}>
+                  {product.category}
                 </span>
-              ))}
             </div>
 
             <div className={styles.infoCard}>
