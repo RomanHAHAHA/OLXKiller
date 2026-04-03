@@ -24,11 +24,13 @@ const Products = () => {
     const fetchProducts = async () => {
         const params = new URLSearchParams();
 
+        console.log(filters)
+
         if (filters.name) params.append("Name", filters.name);
         if (filters.price) params.append("Price", filters.price);
         if (filters.isAvailable != null) params.append("IsAvailable", filters.isAvailable);
         if (filters.rating != null) params.append("Rating", filters.rating);
-        filters.categories?.forEach((c) => params.append("Categories", c));
+        filters.categoryIds?.forEach((c) => params.append("CategoriesIds", c));
         if (filters.sortParams?.orderBy) params.append("OrderBy", filters.sortParams.orderBy);
         if (filters.sortParams?.sortDirection) params.append("SortDirection", filters.sortParams.sortDirection);
         params.append("FilterMode", filters.filterMode);
