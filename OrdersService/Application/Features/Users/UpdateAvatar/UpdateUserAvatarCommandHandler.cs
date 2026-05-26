@@ -52,7 +52,7 @@ public class UpdateUserAvatarCommandHandler(
     private async Task OnAvatarUpdateFailure(UpdateUserAvatarCommand request, CancellationToken cancellationToken)
     {
         await publisher.Publish(
-            new UserSnapshotAvatarUpdateFailureEvent
+            new UserAvatarUpdateFailureEvent
             {
                 CorrelationId = request.CorrelationId,
                 SenderServiceName = serviceOptions.Value.Name,

@@ -59,14 +59,27 @@ public class SetAvatarImageCommandHandler(
     
     private async Task OnAvatarSet(User user, CancellationToken cancellationToken)
     {
+        var correlationId = Guid.NewGuid();
+        
         await publishEndpoint.Publish(
             new UserAvatarUpdatedEvent
             {
-                CorrelationId = Guid.NewGuid(),
+                CorrelationId = correlationId,
                 SenderServiceName = serviceOptions.Value.Name,
                 UserId = user.Id,
                 AvatarPath = user.AvatarPath!,
             }, 
+            cancellationToken);
+        
+        await publishEndpoint.Publish(
+            new VerifyUserAvatarUpdatedEvent
+            {
+                CorrelationId = correlationId,
+                SenderServiceName = serviceOptions.Value.Name,
+                UserId = user.Id,
+                AvatarPath = user.AvatarPath!,
+            }, 
+            context => context.Delay = TimeSpan.FromSeconds(30),
             cancellationToken);
     }
 }

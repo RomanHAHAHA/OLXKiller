@@ -29,6 +29,8 @@ export const SignalRProvider = ({ children }) => {
           }
         }
 
+        console.log("Starting SignalR connection..."); // Лог начала подключения
+
         newConnection = new HubConnectionBuilder()
           .withUrl("https://localhost:7072/notifications-hub", { 
             withCredentials: true,
@@ -66,6 +68,7 @@ export const SignalRProvider = ({ children }) => {
         if (isMounted) setConnectionState('Connecting');
 
         await newConnection.start();
+
         const id = await newConnection.invoke("GetConnectionId");
 
         if (isMounted) {
@@ -73,11 +76,12 @@ export const SignalRProvider = ({ children }) => {
           setConnectionId(id);
           setConnectionState('Connected');
         }
-        console.log("SignalR connected. ID:", id);
+        console.log("SignalR fully connected. Connection ID:", id); // Теперь ID точно есть
 
       } catch (err) {
         if (isMounted) setConnectionState('Failed');
         console.error("Connection failed:", err);
+        console.log("Attempting to reconnect in 5 seconds..."); // Лог о попытке переподключения
         setTimeout(createConnection, 5000);
       }
     };
@@ -87,6 +91,7 @@ export const SignalRProvider = ({ children }) => {
     return () => {
       isMounted = false;
       if (newConnection) {
+        console.log("Stopping SignalR connection..."); // Лог остановки подключения
         newConnection.stop().catch(err => 
           console.log("Error while stopping connection:", err)
         );

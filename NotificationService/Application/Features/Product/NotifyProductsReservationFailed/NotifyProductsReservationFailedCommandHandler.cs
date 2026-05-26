@@ -6,8 +6,7 @@ using NotificationService.Domain.Interfaces;
 namespace NotificationService.Application.Features.Product.NotifyProductsReservationFailed;
 
 public class NotifyProductsReservationFailedCommandHandler(
-    IHubContext<NotificationHub, INotificationClient> hubContext) : 
-    IRequestHandler<NotifyProductsReservationFailedCommand>
+    IHubContext<NotificationHub, INotificationClient> hubContext) : IRequestHandler<NotifyProductsReservationFailedCommand>
 {
     public async Task Handle(NotifyProductsReservationFailedCommand request, CancellationToken cancellationToken)
     {

@@ -89,15 +89,36 @@ const Register = () => {
   useEffect(() => {
     if (connectionId) {
       setFormData(prev => ({ ...prev, connectionId }));
-    }
-  }, [connectionId]);
+      }
+    }, [connectionId]);
 
-  useEffect(() => {
+    useEffect(() => {
     if (!connection) return;
+
+    // Обработчик успешной регистрации
     connection.on("NotifyUserRegistered", () => {
       setErrors({});
       navigate("/confirm-email", { state: { email: formData.email } });
     });
+
+    // Обработчик ошибки регистрации (без параметров)
+    connection.on("NotifyUserRegistrationFailed", () => {
+      setIsSubmitting(false);
+      Swal.fire({
+        icon: 'error',
+        title: 'Registration Failed',
+        text: 'An error occurred during registration. Please try again later.',
+        background: '#1a1a2e',
+        color: '#ffffff',
+        confirmButtonColor: '#4ecca3',
+      });
+    });
+
+    // Очистка при размонтировании
+    return () => {
+      connection.off("NotifyUserRegistered");
+      connection.off("notifyuserregistrationfailed");
+    };
   }, [connection, formData.email, navigate]);
 
   return (

@@ -5,10 +5,9 @@ using NotificationService.Application.Features.User.NotifyAvatarUpdateFailure;
 
 namespace NotificationService.Infrastructure.Consumers;
 
-public class UserSnapshotAvatarUpdateFailureConsumer(
-    IMediator mediator) : IConsumer<UserSnapshotAvatarUpdateFailureEvent>
+public class UserSnapshotAvatarUpdateFailureConsumer(IMediator mediator) : IConsumer<UserAvatarUpdateFailureEvent>
 {
-    public async Task Consume(ConsumeContext<UserSnapshotAvatarUpdateFailureEvent> context)
+    public async Task Consume(ConsumeContext<UserAvatarUpdateFailureEvent> context)
     {
         var @event = context.Message;
         var command = new NotifyAvatarUpdateFailedCommand(

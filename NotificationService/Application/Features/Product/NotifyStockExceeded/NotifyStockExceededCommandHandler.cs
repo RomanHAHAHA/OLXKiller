@@ -11,7 +11,6 @@ public class NotifyStockExceededCommandHandler(
 {
     public async Task Handle(NotifyProductStockExceededCommand request, CancellationToken cancellationToken)
     {
-        Console.WriteLine($"{request.UserId}: Notifying Stock Exceeded {request.StockQuantity}.");
         await hubContext.Clients
             .User(request.UserId.ToString())
             .NotifyProductStockExceeded(request.StockQuantity);

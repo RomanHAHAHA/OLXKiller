@@ -16,7 +16,6 @@ public class ChatHub(
         var userId = GetCurrentUserId();
         await connectionTracker.SetConnectionAsync(userId, Context.ConnectionId, Guid.Empty);
         await mediator.Send(new SetUserOnlineCommand(userId));
-        
         await base.OnConnectedAsync();
     }
 
@@ -25,7 +24,6 @@ public class ChatHub(
         var userId = GetCurrentUserId();
         await connectionTracker.FullRemoveConnectionAsync(Context.ConnectionId);
         await mediator.Send(new SetUserOfflineCommand(userId));
-        
         await base.OnDisconnectedAsync(exception);
     }
     

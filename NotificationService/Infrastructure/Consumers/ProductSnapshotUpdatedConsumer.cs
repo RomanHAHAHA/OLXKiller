@@ -10,7 +10,7 @@ public class ProductSnapshotUpdatedConsumer(IMediator mediator) : IConsumer<Prod
     public async Task Consume(ConsumeContext<ProductSnapshotUpdatedEvent> context)
     {
         var @event = context.Message;
-        var command = new NotifyProductSnapshotUpdatedCommand(
+        var command = new NotifyProductUpdatedCommand(
             @event.CorrelationId,
             @event.SenderServiceName,
             @event.ProductId,

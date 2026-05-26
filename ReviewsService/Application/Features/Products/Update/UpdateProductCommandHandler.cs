@@ -4,7 +4,6 @@ using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Options;
 using ReviewsService.Domain.Interfaces;
-using ReviewsService.Infrastructure.Persistence;
 
 namespace ReviewsService.Application.Features.Products.Update;
 
@@ -60,7 +59,6 @@ public class UpdateProductCommandHandler(
                 SenderServiceName = serviceOptions.Value.Name,
                 ProductId = request.ProductId,
             },
-            typeof(ReviewsDbContext),
             cancellationToken);
     }
 }

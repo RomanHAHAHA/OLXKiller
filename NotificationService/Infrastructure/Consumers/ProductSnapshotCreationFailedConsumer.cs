@@ -5,8 +5,7 @@ using NotificationService.Application.Features.Product.NotifyProductCreationFail
 
 namespace NotificationService.Infrastructure.Consumers;
 
-public class ProductSnapshotCreationFailedConsumer(
-    IMediator mediator) : IConsumer<ProductSnapshotCreationFailedEvent>
+public class ProductSnapshotCreationFailedConsumer(IMediator mediator) : IConsumer<ProductSnapshotCreationFailedEvent>
 {
     public async Task Consume(ConsumeContext<ProductSnapshotCreationFailedEvent> context)
     {

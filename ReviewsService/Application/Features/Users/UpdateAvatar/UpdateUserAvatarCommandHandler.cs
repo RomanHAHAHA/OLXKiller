@@ -53,7 +53,7 @@ public class UpdateUserAvatarCommandHandler(
     private async Task OnAvatarUpdateFailed(UpdateUserAvatarCommand request, CancellationToken cancellationToken)
     {
         await publisher.PublishInIsolatedScopeAsync<ReviewsDbContext>(
-            new UserSnapshotAvatarUpdateFailureEvent
+            new UserAvatarUpdateFailureEvent
             {
                 CorrelationId = request.CorrelationId,
                 SenderServiceName = serviceOptions.Value.Name,

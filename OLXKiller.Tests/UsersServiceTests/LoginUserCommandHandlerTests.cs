@@ -102,7 +102,6 @@ public class LoginUserCommandHandlerTests
         Assert.Equal(HttpStatusCode.Conflict, result.Status);
         Assert.Equal("You have to confirm your email", result.Error);
         _passwordHasherMock.Verify(x => x.Verify(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
-        
         _usersRepositoryMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
     }
 
@@ -139,7 +138,6 @@ public class LoginUserCommandHandlerTests
             It.IsAny<CancellationToken>()), Times.Once);
         
         _usersRepositoryMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
-
     }
 
     [Fact]

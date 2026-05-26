@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using Common.Application.Options;
 using Common.Domain.Enums;
+using Common.Domain.Interfaces;
 using Common.Infrastructure.Messaging.Events.Product;
 using Common.Infrastructure.Messaging.Events.SystemAction;
 using MassTransit;
@@ -18,6 +19,7 @@ public class UpdateProductCommandHandlerTests
     private readonly Mock<IProductsRepository> _productsRepositoryMock = new();
     private readonly Mock<IPublishEndpoint> _publisherMock = new();
     private readonly Mock<IOptions<ServiceOptions>> _serviceOptionsMock = new();
+    private readonly Mock<ICacheService<string>> _cacheService = new();
 
     private readonly UpdateProductCommandHandler _handler;
     
@@ -37,7 +39,8 @@ public class UpdateProductCommandHandlerTests
         _handler = new UpdateProductCommandHandler(
             _productsRepositoryMock.Object,
             _publisherMock.Object,
-            _serviceOptionsMock.Object);
+            _serviceOptionsMock.Object,
+            _cacheService.Object);
 
         _existingProduct = new Product
         {
@@ -85,6 +88,12 @@ public class UpdateProductCommandHandlerTests
         _productsRepositoryMock.Verify(x => x.GetByIdAsync(_testProductId, CancellationToken.None), Times.Once);
         _productsRepositoryMock.Verify(x => x.SaveChangesAsync(CancellationToken.None), Times.Once);
         
+        _cacheService.Verify(x => x.SetAsync(
+            It.Is<string>(key => key.StartsWith($"old-product:{_testProductId}")),
+            It.IsAny<string>(),
+            It.Is<TimeSpan>(ts => ts == TimeSpan.FromMinutes(10)),
+            CancellationToken.None), Times.Once);
+            
         _publisherMock.Verify(x => x.Publish(
             It.Is<SystemActionEvent>(e => 
                 e.UserId == _testUserId &&
@@ -93,15 +102,8 @@ public class UpdateProductCommandHandlerTests
                 e.Message.Contains($"Product {_testProductId} updated")),
             CancellationToken.None), Times.Once);
             
-        _publisherMock.Verify(x => x.Publish(
-            It.Is<ProductUpdatedEvent>(e => 
-                e.ProductId == _testProductId &&
-                e.UserId == _testUserId &&
-                e.SenderServiceName == "ProductsService" &&
-                e.Name == "New Product Name" &&
-                e.Price == 99.99m &&
-                e.StockQuantity == 20),
-            CancellationToken.None), Times.Once);
+        _publisherMock.Verify(x => x.Publish(It.Is<ProductUpdatedEvent>(e => e.ProductId == _testProductId && e.UserId == _testUserId && e.SenderServiceName == "ProductsService" && e.Name == "New Product Name" && e.Price == 99.99m && e.StockQuantity == 20), CancellationToken.None), Times.Once);
+        _publisherMock.Verify(x => x.Publish(It.IsAny<VerifyProductUpdatedEvent>(), It.IsAny<IPipe<PublishContext<VerifyProductUpdatedEvent>>>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -125,16 +127,17 @@ public class UpdateProductCommandHandlerTests
         
         _productsRepositoryMock.Verify(x => x.GetByIdAsync(_testProductId, CancellationToken.None), Times.Once);
         _productsRepositoryMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
+        _cacheService.Verify(x => x.SetAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>()), Times.Never);
         _publisherMock.Verify(x => x.Publish(It.IsAny<object>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]
-    public async Task Handler_DoesNotPublishEvents_When_OnlyNonSnapshotPropertiesChanged()
+    public async Task Handler_ReturnsConflict_When_NoChangesDetected()
     {
         // Arrange
         var updateDto = new ProductCreateDto(
             _existingProduct.Name, 
-            "Updated Description", 
+            "New Description", 
             _existingProduct.Price, 
             15); 
         
@@ -143,21 +146,19 @@ public class UpdateProductCommandHandlerTests
         _productsRepositoryMock
             .Setup(x => x.GetByIdAsync(_testProductId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(_existingProduct);
-            
-        _productsRepositoryMock
-            .Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(true);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsSuccess);
-        Assert.Equal("Updated Description", _existingProduct.Description);
-        Assert.Equal(15, _existingProduct.StockQuantity);
+        Assert.False(result.IsSuccess);
+        Assert.Equal(HttpStatusCode.Conflict, result.Status);
+        Assert.Equal("Product properties equals to previous", result.Error);
         
-        _publisherMock.Verify(x => x.Publish(It.IsAny<SystemActionEvent>(), It.IsAny<CancellationToken>()), Times.Never);
-        _publisherMock.Verify(x => x.Publish(It.IsAny<ProductUpdatedEvent>(), It.IsAny<CancellationToken>()), Times.Never);
+        _productsRepositoryMock.Verify(x => x.GetByIdAsync(_testProductId, CancellationToken.None), Times.Once);
+        _productsRepositoryMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
+        _cacheService.Verify(x => x.SetAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>()), Times.Never);
+        _publisherMock.Verify(x => x.Publish(It.IsAny<object>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]
@@ -188,7 +189,9 @@ public class UpdateProductCommandHandlerTests
         Assert.Equal(75m, _existingProduct.Price);
         
         _publisherMock.Verify(x => x.Publish(It.IsAny<SystemActionEvent>(), CancellationToken.None), Times.Once);
+        _publisherMock.Verify(x => x.Publish(It.IsAny<VerifyProductUpdatedEvent>(), It.IsAny<IPipe<PublishContext<VerifyProductUpdatedEvent>>>(), It.IsAny<CancellationToken>()), Times.Once);
         _publisherMock.Verify(x => x.Publish(It.IsAny<ProductUpdatedEvent>(), CancellationToken.None), Times.Once);
+        _cacheService.Verify(x => x.SetAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<TimeSpan>(), CancellationToken.None), Times.Once);
     }
 
     [Fact]
@@ -219,7 +222,36 @@ public class UpdateProductCommandHandlerTests
         Assert.Equal("Completely New Name", _existingProduct.Name);
         
         _publisherMock.Verify(x => x.Publish(It.IsAny<SystemActionEvent>(), CancellationToken.None), Times.Once);
+        _publisherMock.Verify(x => x.Publish(It.IsAny<VerifyProductUpdatedEvent>(), It.IsAny<IPipe<PublishContext<VerifyProductUpdatedEvent>>>(), It.IsAny<CancellationToken>()), Times.Once);
         _publisherMock.Verify(x => x.Publish(It.IsAny<ProductUpdatedEvent>(), CancellationToken.None), Times.Once);
+        _cacheService.Verify(x => x.SetAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<TimeSpan>(), CancellationToken.None), Times.Once);
+    }
+    
+    [Fact]
+    public async Task Handler_DoesNotPublishEvents_When_NoEssentialChanges()
+    {
+        // Arrange
+        var updateDto = new ProductCreateDto(
+            _existingProduct.Name, 
+            _existingProduct.Description, 
+            _existingProduct.Price, 
+            _existingProduct.StockQuantity);
+        
+        var command = new UpdateProductCommand(_testUserId, _testProductId, updateDto);
+        
+        _productsRepositoryMock
+            .Setup(x => x.GetByIdAsync(_testProductId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(_existingProduct);
+
+        // Act
+        var result = await _handler.Handle(command, CancellationToken.None);
+
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.Equal(HttpStatusCode.Conflict, result.Status);
+        
+        _publisherMock.Verify(x => x.Publish(It.IsAny<object>(), It.IsAny<CancellationToken>()), Times.Never);
+        _cacheService.Verify(x => x.SetAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>()), Times.Never);
     }
     
     [Fact]
@@ -292,23 +324,18 @@ public class UpdateProductCommandHandlerTests
             .Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
             
-        _publisherMock
-            .Setup(x => x.Publish(It.IsAny<SystemActionEvent>(), It.IsAny<CancellationToken>()))
-            .Callback<object, CancellationToken>((e, _) => 
-                correlationIds.Add(((SystemActionEvent)e).CorrelationId));
-                
-        _publisherMock
-            .Setup(x => x.Publish(It.IsAny<ProductUpdatedEvent>(), It.IsAny<CancellationToken>()))
-            .Callback<object, CancellationToken>((e, _) => 
-                correlationIds.Add(((ProductUpdatedEvent)e).CorrelationId));
+        _publisherMock.Setup(x => x.Publish(It.IsAny<SystemActionEvent>(), It.IsAny<CancellationToken>())).Callback<SystemActionEvent, CancellationToken>((e, _) => correlationIds.Add(e.CorrelationId));
+        _publisherMock.Setup(x => x.Publish(It.IsAny<VerifyProductUpdatedEvent>(), It.IsAny<IPipe<PublishContext<VerifyProductUpdatedEvent>>>(), It.IsAny<CancellationToken>())).Callback<VerifyProductUpdatedEvent, IPipe<PublishContext<VerifyProductUpdatedEvent>>, CancellationToken>((e, _, _) => correlationIds.Add(e.CorrelationId));
+        _publisherMock.Setup(x => x.Publish(It.IsAny<ProductUpdatedEvent>(), It.IsAny<CancellationToken>())).Callback<ProductUpdatedEvent, CancellationToken>((e, _) => correlationIds.Add(e.CorrelationId));
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
         Assert.True(result.IsSuccess);
-        Assert.Equal(2, correlationIds.Count);
-        Assert.Equal(correlationIds[0], correlationIds[1]); 
+        Assert.Equal(3, correlationIds.Count);
+        Assert.Equal(correlationIds[0], correlationIds[1]);
+        Assert.Equal(correlationIds[0], correlationIds[2]);
     }
 
     [Fact]
@@ -333,5 +360,41 @@ public class UpdateProductCommandHandlerTests
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal(originalOwnerId, _existingProduct.UserId); 
+    }
+
+    [Fact]
+    public async Task Handler_SavesOldProductPropertiesToCache()
+    {
+        // Arrange
+        var updateDto = new ProductCreateDto("New Name", "New Desc", 100m, 20);
+        var command = new UpdateProductCommand(_testUserId, _testProductId, updateDto);
+        
+        string? cachedJson = null;
+        
+        _productsRepositoryMock
+            .Setup(x => x.GetByIdAsync(_testProductId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(_existingProduct);
+            
+        _productsRepositoryMock
+            .Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+            
+        _cacheService
+            .Setup(x => x.SetAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<TimeSpan>(), It.IsAny<CancellationToken>()))
+            .Callback<string, string, TimeSpan, CancellationToken>((key, value, ts, ct) => cachedJson = value)
+            .Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _handler.Handle(command, CancellationToken.None);
+
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(cachedJson);
+        
+        _cacheService.Verify(x => x.SetAsync(
+            $"old-product:{_testProductId}",
+            It.IsAny<string>(),
+            TimeSpan.FromMinutes(10),
+            CancellationToken.None), Times.Once);
     }
 }

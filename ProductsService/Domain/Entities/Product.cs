@@ -1,6 +1,5 @@
 ﻿using Common.Domain.Abstractions;
 using ProductsService.Application.Common.Dtos;
-using ProductsService.Application.Features.Products.Commands.Create;
 
 namespace ProductsService.Domain.Entities;
 

@@ -76,31 +76,37 @@ public static class ServiceCollectionExtensions
 
     public static WebApplicationBuilder AddMessaging(this WebApplicationBuilder builder)
     {
-        builder.Services.AddScoped(typeof(IdempotencyFilter<>));
-        
-        builder.Services.AddMassTransit(bugConfigurator =>
+        //builder.Services.AddScoped(typeof(IdempotencyFilter<>));
+        builder.Services.AddMassTransit(x =>
         {
-            bugConfigurator.AddConsumers(typeof(Program).Assembly);
-            bugConfigurator.SetKebabCaseEndpointNameFormatter();
+            x.AddConsumers(typeof(Program).Assembly);
+            x.AddDelayedMessageScheduler();
+            x.SetKebabCaseEndpointNameFormatter();
     
-            bugConfigurator.AddEntityFrameworkOutbox<UserDbContext>(options =>
+            x.AddEntityFrameworkOutbox<UserDbContext>(options =>
             {
                 options.DuplicateDetectionWindow = TimeSpan.FromSeconds(30);
                 options.QueryDelay = TimeSpan.FromSeconds(1);
                 options.UseSqlServer().UseBusOutbox();
             });
     
-            bugConfigurator.UsingRabbitMq((context, с) =>
+            x.UsingRabbitMq((context, c) =>
             {
-                с.UseConsumeFilter(typeof(IdempotencyFilter<>), context);
+                c.UseDelayedMessageScheduler(); 
+                c.UseMessageRetry(r =>
+                {
+                    r.Interval(5, TimeSpan.FromSeconds(5));
+                });
                 
-                с.Host(builder.Configuration["MessageBroker:Host"]!, "/", h =>
+                c.UseConsumeFilter(typeof(IdempotencyFilter<>), context);
+                
+                c.Host(builder.Configuration["MessageBroker:Host"]!, "/", h =>
                 {
                     h.Username(builder.Configuration["MessageBroker:UserName"]!);
                     h.Password(builder.Configuration["MessageBroker:Password"]!);
                 });
         
-                с.ConfigureEndpoints(context);
+                c.ConfigureEndpoints(context);
             });
         });
         

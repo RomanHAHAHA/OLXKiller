@@ -48,7 +48,6 @@ const UpdateProductPage = () => {
             if (!response.ok) {
                 const data = await response.json();
                 if (data.errors) {
-                    // Преобразуем ошибки к нужному формату
                     const formattedErrors = {};
                     Object.keys(data.errors).forEach(key => {
                         formattedErrors[key] = data.errors[key];
@@ -61,6 +60,7 @@ const UpdateProductPage = () => {
 
             setHasChanges(false);
             setValidationErrors({});
+            navigate(`/products/${productId}/add-categories`);
             return await response.json();
         } catch (error) {
             Swal.fire('Error', error.message, 'error');

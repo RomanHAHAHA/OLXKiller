@@ -72,5 +72,16 @@ public class RegisterUserCommandHandler(
                 ConnectionId = connectionId,
             }, 
             cancellationToken);
+        
+        await publishEndpoint.Publish(
+            new VerifyUserRegisteredEvent()
+            {
+                CorrelationId = correlationId,
+                SenderServiceName = serviceName,
+                ConnectionId = connectionId,
+                UserId = user.Id,
+            }, 
+            context => context.Delay = TimeSpan.FromSeconds(30),
+            cancellationToken);
     }
 }

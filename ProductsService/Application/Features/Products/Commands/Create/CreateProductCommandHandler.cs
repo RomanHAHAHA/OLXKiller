@@ -45,6 +45,17 @@ public class CreateProductCommandHandler(
             cancellationToken);
 
         await publishEndpoint.Publish(
+            new VerifyProductCreatedEvent
+            {
+                CorrelationId = correlationId,
+                SenderServiceName = serviceName,
+                ProductId = product.Id,
+                UserId = product.UserId,
+            },
+            context => context.Delay = TimeSpan.FromSeconds(30),
+            cancellationToken);
+        
+        await publishEndpoint.Publish(
             new ProductCreatedEvent
             {
                 CorrelationId = correlationId,

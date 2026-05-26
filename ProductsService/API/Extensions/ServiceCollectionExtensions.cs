@@ -82,34 +82,44 @@ public static class ServiceCollectionExtensions
 
     public static WebApplicationBuilder AddMessaging(this WebApplicationBuilder builder)
     {
-        builder.Services.AddScoped(typeof(IdempotencyFilter<>));
-        
-        builder.Services.AddMassTransit(bugConfigurator =>
+        builder.Services.AddMassTransit(x =>
         {
-            bugConfigurator.AddConsumers(typeof(Program).Assembly);
-            bugConfigurator.SetKebabCaseEndpointNameFormatter();
-            
-            bugConfigurator.AddEntityFrameworkOutbox<ProductsDbContext>(options =>
+            x.AddConsumers(typeof(Program).Assembly);
+            x.AddDelayedMessageScheduler();
+            x.SetKebabCaseEndpointNameFormatter();
+
+            x.AddEntityFrameworkOutbox<ProductsDbContext>(options =>
             {
                 options.QueryDelay = TimeSpan.FromSeconds(1);
                 options.UseSqlServer();
                 options.UseBusOutbox();
             });
-    
-            bugConfigurator.UsingRabbitMq((context, c) =>
+
+            x.UsingRabbitMq((context, c) =>
             {
-                c.UseConsumeFilter(typeof(IdempotencyFilter<>), context);
+                c.UseDelayedMessageScheduler(); 
+                c.UseMessageRetry(r =>
+                {
+                    r.Interval(5, TimeSpan.FromSeconds(5));
+                });
                 
+                c.UseConsumeFilter(typeof(IdempotencyFilter<>), context);
+
                 c.Host(builder.Configuration["MessageBroker:Host"]!, "/", h =>
                 {
                     h.Username(builder.Configuration["MessageBroker:UserName"]!);
                     h.Password(builder.Configuration["MessageBroker:Password"]!);
                 });
-        
-                c.ReceiveEndpoint("products-user-avatar-updated", e => e.ConfigureConsumer<UserAvatarUpdatedConsumer>(context));
-                c.ReceiveEndpoint("products-user-registered", e => e.ConfigureConsumer<UserRegisteredConsumer>(context));
-                c.ReceiveEndpoint("products-product-snapshot-creation-failed", e => e.ConfigureConsumer<ProductSnapshotCreationFailedConsumer>(context));
-                
+
+                c.ReceiveEndpoint("products-user-avatar-updated", e =>
+                    e.ConfigureConsumer<UserAvatarUpdatedConsumer>(context));
+
+                c.ReceiveEndpoint("products-user-registered", e =>
+                    e.ConfigureConsumer<UserRegisteredConsumer>(context));
+
+                c.ReceiveEndpoint("products-product-snapshot-creation-failed", e =>
+                    e.ConfigureConsumer<ProductSnapshotCreationFailedConsumer>(context));
+
                 c.ConfigureEndpoints(context);
             });
         });

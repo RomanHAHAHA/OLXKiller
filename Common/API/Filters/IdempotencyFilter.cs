@@ -23,7 +23,6 @@ public class IdempotencyFilter<T>(
             ReceiverServiceName = serviceOptions.Value.Name
         };
         var key = JsonConvert.SerializeObject(keyObject);
-
         var isNew = await cache.SetIfNotExistsAsync(key, new object(), TimeSpan.FromHours(1));
 
         if (!isNew)

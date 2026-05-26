@@ -2,7 +2,7 @@
 
 namespace NotificationService.Application.Features.Product.NotifyProductUpdated;
 
-public record NotifyProductSnapshotUpdatedCommand(
+public record NotifyProductUpdatedCommand(
     Guid CorrelationId,
     string SenderServiceName,
     Guid ProductId,

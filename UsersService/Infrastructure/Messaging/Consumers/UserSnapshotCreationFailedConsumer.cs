@@ -5,8 +5,7 @@ using UsersService.Application.Features.Users.Delete;
 
 namespace UsersService.Infrastructure.Messaging.Consumers;
 
-public class UserSnapshotCreationFailedConsumer(
-    IServiceProvider serviceProvider) : IConsumer<UserSnapshotCreationFailedEvent>
+public class UserSnapshotCreationFailedConsumer(IServiceProvider serviceProvider) : IConsumer<UserSnapshotCreationFailedEvent>
 {
     public async Task Consume(ConsumeContext<UserSnapshotCreationFailedEvent> context)
     {

@@ -6,6 +6,7 @@ using Common.Domain.Interfaces;
 using MassTransit;
 using NotificationService.Application.Services;
 using NotificationService.Domain.Interfaces;
+using NotificationService.Domain.TransactionCoordinators;
 using NotificationService.Infrastructure.Consumers;
 using StackExchange.Redis;
 
@@ -20,9 +21,18 @@ public static class ServiceCollectionExtensions
         builder.Services.AddSingleton<IConnectionMultiplexer>(_ =>
             ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis")!));
 
+        builder.Services.AddScoped<ITransactionCompleter, TransactionCompleter>();
+        builder.Services.AddScoped<ITransactionFailureHandler, TransactionFailureHandler>();
+        builder.Services.AddScoped<ITransactionTimeoutHandler, TransactionTimeoutHandler>();
+        
+        builder.Services.AddScoped<ITransactionCoordinatorFactory, TransactionCoordinatorFactory>();
+        builder.Services.AddScoped<ProductCreationCoordinator>();
+        builder.Services.AddScoped<ProductUpdateCoordinator>();
+        builder.Services.AddScoped<AvatarUpdateCoordinator>();
+        builder.Services.AddScoped<UserRegisterCoordinator>();
+        
         builder.Services.AddScoped(typeof(ICacheService<>), typeof(CacheService<>));
-        builder.Services.AddScoped<IHashCacheService, RedisHashCacheService>();
-        builder.Services.AddScoped<IRedisLockService, RedisLockService>();
+        builder.Services.AddScoped<IRedisService, RedisService>();
         
         builder.Services.AddMediatR(cfg =>
         {
